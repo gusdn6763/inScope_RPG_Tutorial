@@ -1,16 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class Player : Character
 {
-    [SerializeField] private Stat health;
-    [SerializeField] private Stat mana;
+    [SerializeField] private Stat health = null;
+    [SerializeField] private Stat mana = null;
+    [SerializeField] private Block[] blocks = null;
+    [SerializeField] protected Transform[] exitPoint = null;
+    [SerializeField] protected GameObject[] spellPrefab = null;
+
+    public Transform MyTarget { get; set; }
 
     private float initHealth = 100;
     private float initMana = 50;
+    private int exitIndex;
 
-    public void Start()
+    private void Start()
     {
         health.Initialize(initHealth, initHealth);
         mana.Initialize(initMana, initMana);
@@ -19,34 +26,68 @@ public class Player : Character
 
     protected override void Update()
     {
-        //Executes the GetInput function
         GetInput();
-
         base.Update();
     }
 
     private void GetInput()
     {
-        ///THIS IS USED FOR DEBUGGING ONLY
-        ///
-        if (Input.GetKeyDown(KeyCode.I))
+        direction.x = Input.GetAxisRaw("Horizontal");
+        direction.y = Input.GetAxisRaw("Vertical");
+        if (IsMoving)
         {
-            health.MyCurrentValue -= 10;
-            mana.MyCurrentValue -= 10;
+            if (direction.y > 0) 
+                exitIndex = 0;         // 위쪽
+            else if (direction.y < 0) 
+                exitIndex = 2;    // 아래
+            else if (direction.x > 0) 
+                exitIndex = 1;    // 오른족
+            else 
+                exitIndex = 3;       // 왼쪽
         }
-        if (Input.GetKeyDown(KeyCode.O))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            health.MyCurrentValue += 10;
-            mana.MyCurrentValue += 10;
+
+
+        }
+    }
+
+    private IEnumerator Attack(int spellIndex)
+    {
+        isAttacking = true;
+        animator.SetBool("Attack", isAttacking);
+        yield return new WaitForSeconds(1);
+        Instantiate(spellPrefab[spellIndex], exitPoint[exitIndex].position, quaternion.identity);
+        StopAttack();
+    }
+
+    public void CastSpell(int spellIndex)
+    {
+        Block();
+        if (MyTarget != null && !isAttacking && !IsMoving && InLineOfSight())
+        {
+            attackRoutine = StartCoroutine(Attack(spellIndex));
+        }
+    }
+
+    private bool InLineOfSight()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, MyTarget.position, Vector2.Distance(transform.position, MyTarget.position), 256);
+
+        if (hit.collider == null)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private void Block()
+    {
+        foreach (Block b in blocks)
+        {
+            b.activate(false);
         }
 
-
-
-        Vector2 moveVector;
-
-        moveVector.x = Input.GetAxisRaw("Horizontal");
-        moveVector.y = Input.GetAxisRaw("Vertical");
-
-        direction = moveVector;
+        blocks[exitIndex].activate(true);
     }
 }
