@@ -5,25 +5,40 @@ using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
 {
+
     [SerializeField] private Player player = null;
+    private NPC currentTarget;
 
-
-    private void Update()
+    void Update()
     {
         ClickTarget();
     }
 
     private void ClickTarget()
     {
-       
-        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+        if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
         {
-            Debug.Log(EventSystem.current.IsPointerOverGameObject());
-            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, Mathf.Infinity, 512);
+            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            if (hit.collider.CompareTag("Enemy"))
+            RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector3.zero, Mathf.Infinity, 512);
+
+            if (hit.collider != null)
             {
-                player.MyTarget = hit.transform;
+                if (currentTarget != null)
+                {
+                    currentTarget.DeSelect();
+                }
+                currentTarget = hit.collider.GetComponent<NPC>();
+                player.MyTarget = currentTarget.Select();
+            }
+            else
+            {
+                if (currentTarget != null)
+                {
+                    currentTarget.DeSelect();
+                }
+                currentTarget = null;
+                player.MyTarget = null;
             }
         }
     }

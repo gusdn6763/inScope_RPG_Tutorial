@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
 public abstract class Character : MonoBehaviour
 {
     protected Animator animator;
     protected Rigidbody2D rigi;
     protected Coroutine attackRoutine;
+    [SerializeField] protected Stat health;
 
     [SerializeField] private float speed = 1f;
     protected Vector2 direction;
 
-
+    [SerializeField] protected Transform hitBox;
     protected bool isAttacking = false;
-
+    [SerializeField]private float initHealth;
 
     public enum LayerName
     {
@@ -37,6 +39,10 @@ public abstract class Character : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
+    protected virtual void Start()
+    {
+        health.Initialize(initHealth, initHealth);
+    }
 
     protected virtual void Update()
     {
@@ -83,13 +89,23 @@ public abstract class Character : MonoBehaviour
         animator.SetLayerWeight((int)layerName, 1);
     }
 
-    public void StopAttack()
+    public virtual void StopAttack()
     {
         if (attackRoutine != null)
         {
             StopCoroutine(attackRoutine);
             isAttacking = false;
             animator.SetBool("Attack", isAttacking);
+        }
+    }
+
+    public virtual void TakeDamage(float damage)
+    {
+        health.MyCurrentValue -= damage;
+
+        if (health.MyCurrentValue <= 0)
+        {
+
         }
     }
 }

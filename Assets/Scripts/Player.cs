@@ -5,21 +5,26 @@ using UnityEngine;
 
 public class Player : Character
 {
-    [SerializeField] private Stat health = null;
     [SerializeField] private Stat mana = null;
     [SerializeField] private Block[] blocks = null;
     [SerializeField] protected Transform[] exitPoint = null;
-    [SerializeField] protected GameObject[] spellPrefab = null;
+    private SpellBook spellBook;
+
 
     public Transform MyTarget { get; set; }
 
-    private float initHealth = 100;
     private float initMana = 50;
     private int exitIndex;
 
-    private void Start()
+    protected override void Awake()
     {
-        health.Initialize(initHealth, initHealth);
+        base.Awake();
+        spellBook = GetComponent<SpellBook>();
+    }
+
+    protected override void Start()
+    {
+        base.Start();
         mana.Initialize(initMana, initMana);
     }
 
@@ -47,36 +52,52 @@ public class Player : Character
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
-
-
         }
     }
 
     private IEnumerator Attack(int spellIndex)
     {
+        Transform currentTarget = MyTarget;
+        Spell newSpell = spellBook.CastSpell(spellIndex);
+
         isAttacking = true;
         animator.SetBool("Attack", isAttacking);
-        yield return new WaitForSeconds(1);
-        Instantiate(spellPrefab[spellIndex], exitPoint[exitIndex].position, quaternion.identity);
+
+        yield return new WaitForSeconds(newSpell.CastTime);
+
+        if (currentTarget != null & InLineOfSight())
+        {
+            Vector3 exitPosition = exitPoint[exitIndex].position;
+            Quaternion exitQuaternion = Quaternion.identity;
+
+            SpellScript s = Instantiate(newSpell.SpellGameObject, exitPosition, exitQuaternion).GetComponent<SpellScript>();
+            s.Initialize(currentTarget, newSpell.Damage);
+        }
         StopAttack();
     }
+
 
     public void CastSpell(int spellIndex)
     {
         Block();
+
         if (MyTarget != null && !isAttacking && !IsMoving && InLineOfSight())
         {
             attackRoutine = StartCoroutine(Attack(spellIndex));
+            
         }
     }
 
     private bool InLineOfSight()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, MyTarget.position, Vector2.Distance(transform.position, MyTarget.position), 256);
-
-        if (hit.collider == null)
+        if (MyTarget != null)
         {
-            return true;
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, MyTarget.position, Vector2.Distance(transform.position, MyTarget.position), 256);
+
+            if (hit.collider == null)
+            {
+                return true;
+            }
         }
         return false;
     }
@@ -89,5 +110,11 @@ public class Player : Character
         }
 
         blocks[exitIndex].activate(true);
+    }
+
+    public override void StopAttack()
+    {
+        base.StopAttack();
+        spellBook.StopCasting();
     }
 }

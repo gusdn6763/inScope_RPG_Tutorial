@@ -1,29 +1,86 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
-public class Spell : MonoBehaviour
+[Serializable]
+public class Spell
 {
-    private Rigidbody2D rigi;
-    private Transform target;
 
-    [SerializeField] private float speed = 1f;
+    [SerializeField]
+    private string name;
 
- 
-    void Awake()
+    [SerializeField]
+    private int damage;
+
+    [SerializeField]
+    private Sprite icon;
+
+    [SerializeField]
+    private float speed;
+
+    [SerializeField]
+    private float castTime;
+
+    [SerializeField]
+    private GameObject spellGameObject;
+
+
+    [SerializeField]
+    private Color barColor;
+
+    public string Name
     {
-        rigi = GetComponent<Rigidbody2D>();
-        //디버깅용
-        target = GameObject.Find("target").transform;
+        get
+        {
+            return name;
+        }
     }
 
-    private void FixedUpdate()
+    public int Damage
     {
-        Vector2 direction = target.position - transform.position;
-        rigi.velocity = direction.normalized * speed;
+        get
+        {
+            return damage;
+        }
+    }
 
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+    public Sprite Icon
+    {
+        get
+        {
+            return icon;
+        }
+    }
 
+    public float Speed
+    {
+        get
+        {
+            return speed;
+        }
+    }
+
+    public float CastTime
+    {
+        get
+        {
+            return castTime;
+        }
+
+    }
+
+    public GameObject SpellGameObject
+    {
+        get
+        {
+            return spellGameObject;
+        }
+    }
+
+    public Color BarColor
+    {
+        get
+        {
+            return barColor;
+        }
     }
 }
