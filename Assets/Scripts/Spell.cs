@@ -4,28 +4,39 @@ using UnityEngine;
 [Serializable]
 public class Spell
 {
+    [SerializeField] private GameObject spellGameObject = null;
+    [SerializeField] private Sprite icon = null;
 
-    [SerializeField]
-    private string name;
+    [SerializeField] private Color barColor = Color.white;
 
-    [SerializeField]
-    private int damage;
+    [SerializeField] private string name = null;
+    [SerializeField] private float castTime = 0f;
+    [SerializeField] private float speed = 0f;
+    [SerializeField] private int damage = 0;
 
-    [SerializeField]
-    private Sprite icon;
+    public GameObject SpellGameObject
+    {
+        get
+        {
+            return spellGameObject;
+        }
+    }
 
-    [SerializeField]
-    private float speed;
+    public Sprite Icon
+    {
+        get
+        {
+            return icon;
+        }
+    }
 
-    [SerializeField]
-    private float castTime;
-
-    [SerializeField]
-    private GameObject spellGameObject;
-
-
-    [SerializeField]
-    private Color barColor;
+    public Color BarColor
+    {
+        get
+        {
+            return barColor;
+        }
+    }
 
     public string Name
     {
@@ -40,14 +51,6 @@ public class Spell
         get
         {
             return damage;
-        }
-    }
-
-    public Sprite Icon
-    {
-        get
-        {
-            return icon;
         }
     }
 
@@ -66,21 +69,5 @@ public class Spell
             return castTime;
         }
 
-    }
-
-    public GameObject SpellGameObject
-    {
-        get
-        {
-            return spellGameObject;
-        }
-    }
-
-    public Color BarColor
-    {
-        get
-        {
-            return barColor;
-        }
     }
 }

@@ -5,12 +5,12 @@ using UnityEngine.UI;
 
 public class SpellBook : MonoBehaviour
 {
-    [SerializeField] private Spell[] spells;
-    [SerializeField] private Image castingBar;
-    [SerializeField] private Image spellIcon;
-    [SerializeField] private Text spellName;
-    [SerializeField] private Text spellCastingTime;
-    [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private Spell[] spells = null;
+    [SerializeField] private Image castingBar = null;
+    [SerializeField] private Image spellIcon = null;
+    [SerializeField] private Text spellName = null;
+    [SerializeField] private Text spellCastingTime = null;
+    [SerializeField] private CanvasGroup canvasGroup = null;
     private Coroutine spellCoroutine;
     private Coroutine spellStopCoroutine;
 
@@ -57,7 +57,7 @@ public class SpellBook : MonoBehaviour
 
         float progress = 0.0f;
 
-        while (progress <= 1.0)//As long as we are not done fading
+        while (progress <= 1.0)
         {
             canvasGroup.alpha = Mathf.Lerp(0, 1, progress);
 
@@ -74,7 +74,11 @@ public class SpellBook : MonoBehaviour
             StopCoroutine(spellStopCoroutine);
             canvasGroup.alpha = 0;
             spellStopCoroutine = null;
-
+        }
+        if (spellCoroutine != null)
+        {
+            StopCoroutine(spellCoroutine);
+            spellCoroutine = null;
         }
     }
 }

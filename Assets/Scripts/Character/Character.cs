@@ -5,17 +5,19 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
 public abstract class Character : MonoBehaviour
 {
+    [SerializeField] protected Stat health = null;
+    [SerializeField] protected Transform hitBox = null;
     protected Animator animator;
     protected Rigidbody2D rigi;
     protected Coroutine attackRoutine;
-    [SerializeField] protected Stat health;
 
-    [SerializeField] private float speed = 1f;
     protected Vector2 direction;
 
-    [SerializeField] protected Transform hitBox;
+    [SerializeField] private float speed = 1f;
+    [SerializeField] private float initHealth = 0f;
     protected bool isAttacking = false;
-    [SerializeField]private float initHealth;
+
+    public Stat Health { get { return health; } }
 
     public enum LayerName
     {
@@ -31,7 +33,6 @@ public abstract class Character : MonoBehaviour
             return direction.x != 0 || direction.y != 0;
         }
     }
-
 
     protected virtual void Awake()
     {
@@ -105,7 +106,7 @@ public abstract class Character : MonoBehaviour
 
         if (health.MyCurrentValue <= 0)
         {
-
+            animator.SetTrigger("Die");
         }
     }
 }

@@ -11,7 +11,7 @@ public class Stat : MonoBehaviour
 
     [SerializeField] private float lerpSpeed = 1f;
     private float currentFill;
-    private float MyMaxValue;
+    public float MyMaxValue;
 
 
     public float MyCurrentValue
@@ -57,7 +57,12 @@ public class Stat : MonoBehaviour
 
     public void Initialize(float currentValue, float maxValue)
     {
+        if (content == null)
+        {
+            content = GetComponent<Image>();
+        }
         MyMaxValue = maxValue;
         MyCurrentValue = currentValue;
+        content.fillAmount = MyCurrentValue / maxValue;
     }
 }
