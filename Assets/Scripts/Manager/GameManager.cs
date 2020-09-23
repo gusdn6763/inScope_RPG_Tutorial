@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
                     currentTarget.DeSelect();
                 }
                 currentTarget = hit.collider.GetComponent<NPC>();
-                player.MyTarget = currentTarget.Select();
+                player.Target = currentTarget.Select();
                 UIManager.instance.ShowTargetFrame(currentTarget);
             }
             else
@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
                     currentTarget.DeSelect();
                 }
                 currentTarget = null;
-                player.MyTarget = null;
+                player.Target = null;
             }
         }
     }

@@ -7,7 +7,7 @@ public class LayerSorter : MonoBehaviour
     private SpriteRenderer parentRenderer;
     private List<Obstacle> obstacles = new List<Obstacle>();
 
-    private void Start()
+    private void Awake()
     {
         parentRenderer = transform.parent.GetComponent<SpriteRenderer>();
     }
@@ -17,8 +17,8 @@ public class LayerSorter : MonoBehaviour
         if (collision.CompareTag("Obstacle"))
         {
             Obstacle o = collision.GetComponent<Obstacle>();
-            SpriteRenderer oSpriteRenderer = o.MySpriteRenderer;
-
+            o.FadeOut();
+            SpriteRenderer oSpriteRenderer = o.spriteRenderer;
             if (obstacles.Count == 0 || oSpriteRenderer.sortingOrder - 1 < parentRenderer.sortingOrder)
             {
                 parentRenderer.sortingOrder = oSpriteRenderer.sortingOrder - 1;
@@ -33,6 +33,7 @@ public class LayerSorter : MonoBehaviour
         if (collision.CompareTag("Obstacle"))
         {
             Obstacle o = collision.GetComponent<Obstacle>();
+            o.FadeIn();
             obstacles.Remove(o);
 
             if (obstacles.Count == 0)
@@ -43,7 +44,7 @@ public class LayerSorter : MonoBehaviour
             else
             {
                 obstacles.Sort();
-                parentRenderer.sortingOrder = obstacles[0].MySpriteRenderer.sortingOrder - 1;
+                parentRenderer.sortingOrder = obstacles[0].spriteRenderer.sortingOrder - 1;
             }
         }
     }

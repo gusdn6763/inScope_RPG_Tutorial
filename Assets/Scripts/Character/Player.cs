@@ -9,9 +9,9 @@ public class Player : Character
     [SerializeField] private Block[] blocks = null;
     [SerializeField] protected Transform[] exitPoint = null;
     private SpellBook spellBook;
+    private Vector3 min, max;
 
-
-    public Transform MyTarget { get; set; }
+    public Transform Target { get; set; }
 
     private float initMana = 50;
     private int exitIndex;
@@ -28,10 +28,15 @@ public class Player : Character
         mana.Initialize(initMana, initMana);
     }
 
-
     protected override void Update()
     {
+        //Executes the GetInput function
         GetInput();
+
+        float xMinClamp = Mathf.Clamp(transform.position.x, min.x, max.x);
+        float yMinClamp = Mathf.Clamp(transform.position.y, min.y, max.y);
+
+        transform.position = new Vector3(xMinClamp, yMinClamp, transform.position.z);
         base.Update();
     }
 
@@ -54,10 +59,15 @@ public class Player : Character
         {
         }
     }
+    public void SetLimits(Vector3 min, Vector3 max)
+    {
+        this.min = min;
+        this.max = max;
+    }
 
     private IEnumerator Attack(int spellIndex)
     {
-        Transform currentTarget = MyTarget;
+        Transform currentTarget = Target;
         Spell newSpell = spellBook.CastSpell(spellIndex);
 
         isAttacking = true;
@@ -81,7 +91,7 @@ public class Player : Character
     {
         Block();
 
-        if (MyTarget != null && !isAttacking && !IsMoving && InLineOfSight())
+        if (Target != null && !isAttacking && !IsMoving && InLineOfSight())
         {
             attackRoutine = StartCoroutine(Attack(spellIndex));
             
@@ -90,9 +100,9 @@ public class Player : Character
 
     private bool InLineOfSight()
     {
-        if (MyTarget != null)
+        if (Target != null)
         {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, MyTarget.position, Vector2.Distance(transform.position, MyTarget.position), 256);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, Target.position, Vector2.Distance(transform.position, Target.position), 256);
 
             if (hit.collider == null)
             {

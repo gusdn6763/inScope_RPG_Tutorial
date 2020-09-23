@@ -22,7 +22,6 @@ public class UIManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-        DontDestroyOnLoad(this.gameObject);
         heathStat = targetFrame.GetComponentInChildren<Stat>();
     }
     void Start()
@@ -64,7 +63,7 @@ public class UIManager : MonoBehaviour
     }
     public void HideTargetFrame()
     {
-        targetFrame.SetActive(true);
+        targetFrame.SetActive(false);
     }
     public void UpdateTargetFrame(float health)
     {

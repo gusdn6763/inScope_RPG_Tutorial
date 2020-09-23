@@ -44,7 +44,6 @@ public class NPC : Character
         {
             characterRemoved();
         }
-
         Destroy(this.gameObject);
     }
 }

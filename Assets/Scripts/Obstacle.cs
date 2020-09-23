@@ -4,16 +4,19 @@ using UnityEngine;
 public class Obstacle : MonoBehaviour, IComparable<Obstacle>
 {
 
-    public SpriteRenderer MySpriteRenderer { get; set; }
+    public SpriteRenderer spriteRenderer;
 
+    private Color defaultColor;
+    private Color fadeedColor;
+    
     public int CompareTo(Obstacle other)
     {
-        if (MySpriteRenderer.sortingOrder > other.MySpriteRenderer.sortingOrder)
+        if (spriteRenderer.sortingOrder > other.spriteRenderer.sortingOrder)
         {
             return 1;
         }
 
-        else if (MySpriteRenderer.sortingOrder < other.MySpriteRenderer.sortingOrder)
+        else if (spriteRenderer.sortingOrder < other.spriteRenderer.sortingOrder)
         {
             return -1;
         }
@@ -22,8 +25,22 @@ public class Obstacle : MonoBehaviour, IComparable<Obstacle>
     }
 
 
-    private void Start()
+    private void Awake()
     {
-        MySpriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        defaultColor = spriteRenderer.color;
+
+        fadeedColor = defaultColor;
+        fadeedColor.a = 0.7f;
+    }
+
+    public void FadeOut()
+    {
+        spriteRenderer.color = fadeedColor;
+    }
+
+    public void FadeIn()
+    {
+        spriteRenderer.color = defaultColor;
     }
 }
