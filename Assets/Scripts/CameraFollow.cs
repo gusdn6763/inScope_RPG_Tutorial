@@ -9,7 +9,7 @@ public class CameraFollow : MonoBehaviour
 
     float xMax, xMin, yMax, yMin;
 
-    [SerializeField] Tilemap tilemap;
+    [SerializeField] Tilemap tilemap = null;
 
     private Player player;
 

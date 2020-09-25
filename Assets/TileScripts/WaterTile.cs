@@ -10,7 +10,7 @@ public class WaterTile : TileBase
     /// An array with all the waterTiles that we have in our game
     /// </summary>
     [SerializeField]
-    private Sprite[] waterSprites;
+    private Sprite[] waterSprites = null;
 
     //A preview of the tile
     [SerializeField]

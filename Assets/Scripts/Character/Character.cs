@@ -11,7 +11,7 @@ public abstract class Character : MonoBehaviour
     protected Rigidbody2D rigi;
     protected Coroutine attackRoutine;
 
-    protected Vector2 direction;
+    private Vector2 direction;
 
     [SerializeField] private float speed = 1f;
     [SerializeField] private float initHealth = 0f;
@@ -26,13 +26,10 @@ public abstract class Character : MonoBehaviour
         AttackLayer = 2,
     }
 
-    public bool IsMoving
-    {
-        get
-        {
-            return direction.x != 0 || direction.y != 0;
-        }
-    }
+    public bool IsMoving { get => direction.x != 0 || direction.y != 0; }
+
+    public float Speed { get => speed; set => speed = value; }
+    public Vector2 Direction { get => direction; set => direction = value; }
 
     protected virtual void Awake()
     {
@@ -57,7 +54,7 @@ public abstract class Character : MonoBehaviour
 
     public void Move()
     {
-        rigi.velocity = direction.normalized * speed;
+        rigi.velocity = Direction.normalized * Speed;
     }
 
 
@@ -66,8 +63,8 @@ public abstract class Character : MonoBehaviour
         if (IsMoving)
         {
             ActivateLayer(LayerName.WalkLayer);
-            animator.SetFloat("X", direction.x);
-            animator.SetFloat("Y", direction.y);
+            animator.SetFloat("X", Direction.x);
+            animator.SetFloat("Y", Direction.y);
             StopAttack();
         }
         else if (isAttacking)

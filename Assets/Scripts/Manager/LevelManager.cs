@@ -9,7 +9,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private Sprite defultTile = null;
     [SerializeField] private Texture2D[] mapData = null;
     [SerializeField] private MapElement[] mapElements = null;
-    [SerializeField] private MapAtlas[] mapAlements = null;
+    [SerializeField] private MapAtlas[] mapAtlas = null;
     private Dictionary<Point, GameObject> tiles = new Dictionary<Point, GameObject>();
     private List<Color> colors = new List<Color>();
 
@@ -41,8 +41,8 @@ public class LevelManager : MonoBehaviour
             {
                 for (int y = 0; y < mapData[i].height; y++)
                 {
-                    Color c = mapData[i].GetPixel(x, y);
-                    newElement = Array.Find(mapElements, find => find.Color == c);
+                    Color color = mapData[i].GetPixel(x, y);
+                    newElement = Array.Find(mapElements, find => find.Color == color);
                     if (newElement != null)
                     {
                         float xPos = WorldStartPos.x + (defultTile.bounds.size.x * x);
@@ -52,9 +52,13 @@ public class LevelManager : MonoBehaviour
 
                         if (newElement.SpriteAtlas)
                         {
-                            tiles.Add(new Point(x, y), go);
-                            colors.Add(c);
+                            tiles.Add(new Point(x, y), go);       
                             count = 1;
+                            if (color != colors.Find(c => c == color))
+                            {
+                                colors.Add(color);
+                                Debug.Log(colors.Count);
+                            }
                         }
 
                         if (newElement.ObstacleObject)
@@ -65,15 +69,16 @@ public class LevelManager : MonoBehaviour
                         go.transform.parent = map;
                     }
                 }
+
             }
             atlascount += count;
         }
-        if (atlascount != mapAlements.Length)
+        if (atlascount != mapAtlas.Length)
         {
             Debug.LogError("LevelManager Error! AtlasCount is not right");
             Application.Quit();
         }
-        CheckWater(newElement);
+        CheckWater();
     }
 
     private string TileCheck(Point currentPoint)
@@ -102,11 +107,11 @@ public class LevelManager : MonoBehaviour
     }
 
 
-    private void CheckWater(MapElement newElement)
+    private void CheckWater()
     {
-        for (int i = 0; i < mapAlements.Length; i++)
+        for (int i = 0; i < mapAtlas.Length; i++)
         {
-            MapAtlas Mapatlas = Array.Find(mapAlements, find => find.Color == colors.Find(x => x == mapAlements[i].Color));
+            MapAtlas Mapatlas = Array.Find(mapAtlas, find => find.Color == colors.Find(x => x == mapAtlas[i].Color));
 
             foreach (KeyValuePair<Point, GameObject> tile in tiles)
             {
@@ -220,8 +225,8 @@ public class LevelManager : MonoBehaviour
 [Serializable]
 public class MapAtlas
 {
-    [SerializeField] private SpriteAtlas spriteAtlas;
-    [SerializeField] private Color color;
+    [SerializeField] private SpriteAtlas spriteAtlas = null;
+    [SerializeField] private Color color = Color.clear;
     public Color Color
     {
         get

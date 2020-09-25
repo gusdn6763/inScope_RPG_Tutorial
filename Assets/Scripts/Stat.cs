@@ -23,6 +23,7 @@ public class Stat : MonoBehaviour
 
         set
         {
+            Debug.Log(value);
             if (value > MyMaxValue) 
                 currentValue = MyMaxValue;
             else if (value < 0) 

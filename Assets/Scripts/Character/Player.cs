@@ -42,15 +42,18 @@ public class Player : Character
 
     private void GetInput()
     {
-        direction.x = Input.GetAxisRaw("Horizontal");
-        direction.y = Input.GetAxisRaw("Vertical");
+        Vector2 moveVector;
+
+        moveVector.x = Input.GetAxisRaw("Horizontal");
+        moveVector.y = Input.GetAxisRaw("Vertical");
+        Direction = moveVector;
         if (IsMoving)
         {
-            if (direction.y > 0) 
+            if (Direction.y > 0) 
                 exitIndex = 0;         // 위쪽
-            else if (direction.y < 0) 
+            else if (Direction.y < 0) 
                 exitIndex = 2;    // 아래
-            else if (direction.x > 0) 
+            else if (Direction.x > 0) 
                 exitIndex = 1;    // 오른족
             else 
                 exitIndex = 3;       // 왼쪽
