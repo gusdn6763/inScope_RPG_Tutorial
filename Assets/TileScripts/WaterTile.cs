@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class WaterTile : TileBase
+public class WaterTile : Tile
 {
     /// <summary>
     /// An array with all the waterTiles that we have in our game

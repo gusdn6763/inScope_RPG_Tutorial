@@ -6,8 +6,8 @@ public class SpellScript : MonoBehaviour
 {
     private Rigidbody2D rigi;
     private Animator animator;
+    private Transform source;
     public Transform MyTarget { get;private set; }
-
     [SerializeField] private float speed = 1f;
     private float damage;
     private bool alive;
@@ -36,16 +36,17 @@ public class SpellScript : MonoBehaviour
         if (collision.CompareTag("HitBox") && collision.transform == MyTarget)
         {
             speed = 0;
-            collision.GetComponentInParent<Enemy>().TakeDamage(damage);
+            collision.GetComponentInParent<Character>().TakeDamage(damage, source);
             animator.SetTrigger("Impact");
             rigi.velocity = Vector2.zero;
             MyTarget = null;
         }
     }
 
-    public void Initialize(Transform target, int damage)
+    public void Initialize(Transform target, int damage, Transform source)
     {
         this.MyTarget = target;
         this.damage = damage;
+        this.source = source;
     }
 }

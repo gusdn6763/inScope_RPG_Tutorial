@@ -11,7 +11,6 @@ public class Player : Character
     private SpellBook spellBook;
     private Vector3 min, max;
 
-    public Transform Target { get; set; }
 
     private float initMana = 50;
     private int exitIndex;
@@ -61,6 +60,10 @@ public class Player : Character
         if (Input.GetKeyDown(KeyCode.Space))
         {
         }
+        if (IsMoving)
+        {
+            StopAttack();
+        }
     }
     public void SetLimits(Vector3 min, Vector3 max)
     {
@@ -74,7 +77,7 @@ public class Player : Character
         Spell newSpell = spellBook.CastSpell(spellIndex);
 
         isAttacking = true;
-        animator.SetBool("Attack", isAttacking);
+        Animator.SetBool("Attack", isAttacking);
 
         yield return new WaitForSeconds(newSpell.CastTime);
 
@@ -84,7 +87,7 @@ public class Player : Character
             Quaternion exitQuaternion = Quaternion.identity;
 
             SpellScript s = Instantiate(newSpell.SpellGameObject, exitPosition, exitQuaternion).GetComponent<SpellScript>();
-            s.Initialize(currentTarget, newSpell.Damage);
+            s.Initialize(currentTarget, newSpell.Damage, transform);
         }
         StopAttack();
     }
@@ -94,7 +97,7 @@ public class Player : Character
     {
         Block();
 
-        if (Target != null && !isAttacking && !IsMoving && InLineOfSight())
+        if (Target != null && Target.GetComponentInParent<Character>().IsAlive && !isAttacking && !IsMoving && InLineOfSight())
         {
             attackRoutine = StartCoroutine(Attack(spellIndex));
             
@@ -125,9 +128,14 @@ public class Player : Character
         blocks[exitIndex].activate(true);
     }
 
-    public override void StopAttack()
+    public void StopAttack()
     {
-        base.StopAttack();
         spellBook.StopCasting();
+        if (attackRoutine != null)
+        {
+            StopCoroutine(attackRoutine);
+            isAttacking = false;
+            Animator.SetBool("Attack", isAttacking);
+        }
     }
 }

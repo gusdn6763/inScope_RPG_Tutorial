@@ -7,6 +7,7 @@ public abstract class Character : MonoBehaviour
 {
     [SerializeField] protected Stat health = null;
     [SerializeField] protected Transform hitBox = null;
+    public Transform Target { get; set; }
     protected Animator animator;
     protected Rigidbody2D rigi;
     protected Coroutine attackRoutine;
@@ -18,23 +19,26 @@ public abstract class Character : MonoBehaviour
     protected bool isAttacking = false;
 
     public Stat Health { get { return health; } }
+    public bool IsAlive { get => health.MyCurrentValue > 0; }
 
     public enum LayerName
     {
         IdleLayer = 0,
         WalkLayer = 1,
         AttackLayer = 2,
+        DeathLayer = 3,
     }
 
-    public bool IsMoving { get => direction.x != 0 || direction.y != 0; }
-
-    public float Speed { get => speed; set => speed = value; }
+    public Animator Animator { get => animator; set => animator = value; }
     public Vector2 Direction { get => direction; set => direction = value; }
+    public bool IsMoving { get => direction.x != 0 || direction.y != 0; }
+    public float Speed { get => speed; set => speed = value; }
+    public bool IsAttacking { get => isAttacking; set => isAttacking = value; }
 
     protected virtual void Awake()
     {
         rigi = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
+        Animator = GetComponent<Animator>();
     }
 
     protected virtual void Start()
@@ -54,56 +58,58 @@ public abstract class Character : MonoBehaviour
 
     public void Move()
     {
-        rigi.velocity = Direction.normalized * Speed;
+        if (IsAlive)
+        {
+            rigi.velocity = Direction.normalized * Speed;
+        }
     }
 
 
     public void HandleLayers()
     {
-        if (IsMoving)
+        if (IsAlive)
         {
-            ActivateLayer(LayerName.WalkLayer);
-            animator.SetFloat("X", Direction.x);
-            animator.SetFloat("Y", Direction.y);
-            StopAttack();
-        }
-        else if (isAttacking)
-        {
-            ActivateLayer(LayerName.AttackLayer);
+            if (IsMoving)
+            {
+                ActivateLayer(LayerName.WalkLayer);
+                Animator.SetFloat("X", Direction.x);
+                Animator.SetFloat("Y", Direction.y);
+            }
+            else if (isAttacking)
+            {
+                ActivateLayer(LayerName.AttackLayer);
+            }
+            else
+            {
+                ActivateLayer(LayerName.IdleLayer);
+            }
         }
         else
         {
-            ActivateLayer(LayerName.IdleLayer);
+            ActivateLayer(LayerName.DeathLayer);
         }
     }
 
 
     public void ActivateLayer(LayerName layerName)
     {
-        for (int i = 0; i < animator.layerCount; i++)
+        for (int i = 0; i < Animator.layerCount; i++)
         {
-            animator.SetLayerWeight(i, 0);
+            Animator.SetLayerWeight(i, 0);
         }
-        animator.SetLayerWeight((int)layerName, 1);
+        Animator.SetLayerWeight((int)layerName, 1);
     }
 
-    public virtual void StopAttack()
-    {
-        if (attackRoutine != null)
-        {
-            StopCoroutine(attackRoutine);
-            isAttacking = false;
-            animator.SetBool("Attack", isAttacking);
-        }
-    }
 
-    public virtual void TakeDamage(float damage)
+
+    public virtual void TakeDamage(float damage, Transform source)
     {
         health.MyCurrentValue -= damage;
 
         if (health.MyCurrentValue <= 0)
         {
-            animator.SetTrigger("Die");
+            rigi.velocity = Vector2.zero;
+            Animator.SetTrigger("Die");
         }
     }
 }

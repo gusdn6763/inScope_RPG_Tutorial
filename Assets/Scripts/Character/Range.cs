@@ -14,15 +14,15 @@ public class Range : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            parent.Target = collision.transform;
+            parent.SetTarget(collision.transform);
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            parent.Target = null;
-        }
-    }
+    //private void OnTriggerExit2D(Collider2D collision)
+    //{
+    //    if (collision.CompareTag("Player"))
+    //    {
+    //        parent.Target = null;
+    //    }
+    //}
 }
