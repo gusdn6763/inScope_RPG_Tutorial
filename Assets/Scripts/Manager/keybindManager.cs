@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class keybindManager : MonoBehaviour
+public class KeybindManager : MonoBehaviour
 {
-    private static keybindManager instance;
+    public static KeybindManager instance;
 
     public Dictionary<string, KeyCode> keybinds { get; set; }
 
@@ -34,20 +34,22 @@ public class keybindManager : MonoBehaviour
         BindKey("DOWN", KeyCode.S);
         BindKey("RIGHT", KeyCode.D);
 
-        BindKey("Action1", KeyCode.Alpha1);
-        BindKey("Action2", KeyCode.Alpha2);
-        BindKey("Action3", KeyCode.Alpha3);
+        BindKey("ACTION1", KeyCode.Alpha1);
+        BindKey("ACTION2", KeyCode.Alpha2);
+        BindKey("ACTION3", KeyCode.Alpha3);
     }
 
     public void BindKey(string key, KeyCode keyBind)
     {
         Dictionary<string, KeyCode> currentDictionary = keybinds;
 
-        if (key.Contains("ACT"))
+        //key값에 ACTION 문자가 포함되어 있으면 액션키로 변경  
+        if (key.Contains("ACTION"))
         {
             currentDictionary = ActionBinds;
         }
-        if (!currentDictionary.ContainsValue(keyBind))
+        //현재 딕셔너리에 키값이 포함되어 있지 않으면  
+        if (!currentDictionary.ContainsKey(key))
         {
             currentDictionary.Add(key, keyBind);
             UIManager.instance.UpdateKeyText(key, keyBind);
@@ -55,12 +57,27 @@ public class keybindManager : MonoBehaviour
         else if (currentDictionary.ContainsValue(keyBind))
         {
             string myKey = currentDictionary.FirstOrDefault(x => x.Value == keyBind).Key;
-
             currentDictionary[myKey] = KeyCode.None;
             UIManager.instance.UpdateKeyText(key, KeyCode.None);
         }
-
         currentDictionary[key] = keyBind;
+        UIManager.instance.UpdateKeyText(key, keyBind);
         bindName = string.Empty;
+    }
+    public void KeyBindOnClick(string bindName)
+    {
+        this.bindName = bindName;
+    }
+
+    private void OnGUI()
+    {
+        if (bindName != string.Empty)
+        {
+            Event e = Event.current;
+            if (e.isKey)
+            {
+                BindKey(bindName, e.keyCode);
+            }
+        }
     }
 }

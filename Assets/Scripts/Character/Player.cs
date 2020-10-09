@@ -5,10 +5,11 @@ using UnityEngine;
 
 public class Player : Character
 {
+    public static Player instance;
+
     [SerializeField] private Stat mana = null;
     [SerializeField] private Block[] blocks = null;
     [SerializeField] protected Transform[] exitPoint = null;
-    private SpellBook spellBook;
     private Vector3 min, max;
 
     private float initMana = 50;
@@ -16,8 +17,15 @@ public class Player : Character
 
     protected override void Awake()
     {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != null)
+        {
+            Destroy(this.gameObject);
+        }
         base.Awake();
-        spellBook = GetComponent<SpellBook>();
     }
 
     protected override void Start()
@@ -40,40 +48,67 @@ public class Player : Character
 
     private void GetInput()
     {
-        Vector2 moveVector;
+        Direction = Vector2.zero;
 
-        moveVector.x = Input.GetAxisRaw("Horizontal");
-        moveVector.y = Input.GetAxisRaw("Vertical");
-        Direction = moveVector;
-        if (IsMoving)
+        ///THIS IS USED FOR DEBUGGING ONLY
+        if (Input.GetKeyDown(KeyCode.I))
         {
-            if (Direction.y > 0) 
-                exitIndex = 0;         // 위쪽
-            else if (Direction.y < 0) 
-                exitIndex = 2;    // 아래
-            else if (Direction.x > 0) 
-                exitIndex = 1;    // 오른족
-            else 
-                exitIndex = 3;       // 왼쪽
+            health.MyCurrentValue -= 10;
+            mana.MyCurrentValue -= 10;
         }
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.O))
         {
+            health.MyCurrentValue += 10;
+            mana.MyCurrentValue += 10;
+        }
+
+
+        // KeybindManager에 설정된 버튼으로 이동하기
+        if (Input.GetKey(KeybindManager.instance.keybinds["UP"])) //Moves up
+        {
+            exitIndex = 0;
+            Direction += Vector2.up;
+        }
+        if (Input.GetKey(KeybindManager.instance.keybinds["LEFT"])) //Moves left
+        {
+            exitIndex = 3;
+            Direction += Vector2.left;
+        }
+        if (Input.GetKey(KeybindManager.instance.keybinds["DOWN"])) //Moves down
+        {
+            exitIndex = 2;
+            Direction += Vector2.down;
+        }
+        if (Input.GetKey(KeybindManager.instance.keybinds["RIGHT"])) //Moves right
+        {
+            exitIndex = 1;
+            Direction += Vector2.right;
         }
         if (IsMoving)
         {
             StopAttack();
         }
+
+        // KeybindManager에 설정된 버튼으로 스킬 사용
+        foreach (string action in KeybindManager.instance.ActionBinds.Keys)
+        {
+            if (Input.GetKeyDown(KeybindManager.instance.ActionBinds[action]))
+            {
+                UIManager.instance.ClickActionButton(action);
+            }
+        }
     }
+
     public void SetLimits(Vector3 min, Vector3 max)
     {
         this.min = min;
         this.max = max;
     }
 
-    private IEnumerator Attack(int spellIndex)
+    private IEnumerator Attack(string spellName)
     {
         Transform currentTarget = Target;
-        Spell newSpell = spellBook.CastSpell(spellIndex);
+        Spell newSpell = SpellBook.instance.CastSpell(spellName);
 
         isAttacking = true;
         Animator.SetBool("Attack", isAttacking);
@@ -90,13 +125,13 @@ public class Player : Character
     }
 
 
-    public void CastSpell(int spellIndex)
+    public void CastSpell(string spellName)
     {
         Block();
 
         if (Target != null && Target.GetComponentInParent<Character>().IsAlive && !isAttacking && !IsMoving && InLineOfSight())
         {
-            attackRoutine = StartCoroutine(Attack(spellIndex));
+            attackRoutine = StartCoroutine(Attack(spellName));
             
         }
     }
@@ -129,7 +164,7 @@ public class Player : Character
 
     public void StopAttack()
     {
-        spellBook.StopCasting();
+        SpellBook.instance.StopCasting();
         if (attackRoutine != null)
         {
             StopCoroutine(attackRoutine);

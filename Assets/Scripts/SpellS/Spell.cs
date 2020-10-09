@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [Serializable]
-public class Spell
+public class Spell : IUseable, IMoveable
 {
     [SerializeField] private GameObject spellGameObject = null;
     [SerializeField] private Sprite icon = null;
@@ -68,6 +68,10 @@ public class Spell
         {
             return castTime;
         }
+    }
 
+    public void Use()
+    {
+        Player.instance.CastSpell(Name);
     }
 }

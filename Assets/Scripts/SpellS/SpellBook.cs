@@ -1,36 +1,52 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SpellBook : MonoBehaviour
 {
+    public static SpellBook instance;
+
     [SerializeField] private Spell[] spells = null;
     [SerializeField] private Image castingBar = null;
     [SerializeField] private Image spellIcon = null;
-    [SerializeField] private Text spellName = null;
+    [SerializeField] private Text currentSpell = null;
     [SerializeField] private Text spellCastingTime = null;
     [SerializeField] private CanvasGroup canvasGroup = null;
     private Coroutine spellCoroutine;
     private Coroutine spellStopCoroutine;
 
-    public Spell CastSpell(int index)
+    private void Awake()
     {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != null)
+        {
+            Destroy(this.gameObject);
+        }
+    }
+    public Spell CastSpell(string spellName)
+    {
+        Spell spell = Array.Find(spells, x => x.Name == spellName);
+
         castingBar.fillAmount = 0f;
-        castingBar.color = spells[index].BarColor;
-        spellIcon.sprite = spells[index].Icon;
-        spellName.text = spells[index].Name;
-        spellCastingTime.text = spells[index].CastTime.ToString();
-        spellCoroutine = StartCoroutine(Progress(index));
+        castingBar.color = spell.BarColor;
+        spellIcon.sprite = spell.Icon;
+        currentSpell.text = spell.Name;
+        spellCastingTime.text = spell.CastTime.ToString();
+        spellCoroutine = StartCoroutine(Progress(spell));
         spellStopCoroutine = StartCoroutine(FadeBar());
-        return spells[index];
+        return spell;
     }
 
-    private IEnumerator Progress(int index)
+    private IEnumerator Progress(Spell spell)
     {
         float timePassed = Time.deltaTime;
 
-        float rate = 1.0f / spells[index].CastTime;
+        float rate = 1.0f / spell.CastTime;
 
         float progress = 0.0f;
 
@@ -39,9 +55,9 @@ public class SpellBook : MonoBehaviour
             castingBar.fillAmount = Mathf.Lerp(0, 1, progress);
             progress += rate * Time.deltaTime;
             timePassed += Time.deltaTime;
-            spellCastingTime.text = (spells[index].CastTime - timePassed).ToString("F1");
+            spellCastingTime.text = (spell.CastTime - timePassed).ToString("F1");
 
-            if ( spells[index].CastTime - timePassed < 0)
+            if ( spell.CastTime - timePassed < 0)
             {
                 spellCastingTime.text = "0.0";
             }
@@ -80,5 +96,11 @@ public class SpellBook : MonoBehaviour
             StopCoroutine(spellCoroutine);
             spellCoroutine = null;
         }
+    }
+
+    public Spell GetSpell(string spellName)
+    {
+        Spell spell = Array.Find(spells, x => x.Name == spellName);
+        return spell;
     }
 }
