@@ -7,8 +7,7 @@ public abstract class Character : MonoBehaviour
 {
     [SerializeField] protected Stat health = null;
     [SerializeField] protected Transform hitBox = null;
-    public Transform Target { get; set; }
-    protected Animator animator;
+    private Transform target;
     protected Rigidbody2D rigi;
     protected Coroutine attackRoutine;
 
@@ -20,7 +19,12 @@ public abstract class Character : MonoBehaviour
 
     public Stat Health { get { return health; } }
     public bool IsAlive { get => health.MyCurrentValue > 0; }
-
+    public Transform Target { get => target; set => target = value; }
+    public Animator Animator { get; set; }
+    public Vector2 Direction { get => direction; set => direction = value; }
+    public bool IsMoving { get => direction.x != 0 || direction.y != 0; }
+    public float Speed { get => speed; set => speed = value; }
+    public bool IsAttacking { get => isAttacking; set => isAttacking = value; }
     public enum LayerName
     {
         IdleLayer = 0,
@@ -28,13 +32,6 @@ public abstract class Character : MonoBehaviour
         AttackLayer = 2,
         DeathLayer = 3,
     }
-
-    public Animator Animator { get => animator; set => animator = value; }
-    public Vector2 Direction { get => direction; set => direction = value; }
-    public bool IsMoving { get => direction.x != 0 || direction.y != 0; }
-    public float Speed { get => speed; set => speed = value; }
-    public bool IsAttacking { get => isAttacking; set => isAttacking = value; }
-
     protected virtual void Awake()
     {
         rigi = GetComponent<Rigidbody2D>();

@@ -11,7 +11,6 @@ public class Player : Character
     private SpellBook spellBook;
     private Vector3 min, max;
 
-
     private float initMana = 50;
     private int exitIndex;
 
@@ -81,12 +80,10 @@ public class Player : Character
 
         yield return new WaitForSeconds(newSpell.CastTime);
 
-        if (currentTarget != null & InLineOfSight())
+        if (currentTarget != null && InLineOfSight())
         {
-            Vector3 exitPosition = exitPoint[exitIndex].position;
-            Quaternion exitQuaternion = Quaternion.identity;
+            SpellScript s = Instantiate(newSpell.SpellGameObject, exitPoint[exitIndex].position, Quaternion.identity).GetComponent<SpellScript>();
 
-            SpellScript s = Instantiate(newSpell.SpellGameObject, exitPosition, exitQuaternion).GetComponent<SpellScript>();
             s.Initialize(currentTarget, newSpell.Damage, transform);
         }
         StopAttack();
@@ -108,12 +105,14 @@ public class Player : Character
     {
         if (Target != null)
         {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, Target.position, Vector2.Distance(transform.position, Target.position), 256);
+            Vector3 targetDirection = (Target.transform.position - transform.position).normalized;
 
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, targetDirection, Vector2.Distance(transform.position, Target.position), 256);
             if (hit.collider == null)
             {
                 return true;
             }
+
         }
         return false;
     }
@@ -122,10 +121,10 @@ public class Player : Character
     {
         foreach (Block b in blocks)
         {
-            b.activate(false);
+            b.BlockCheck(false);
         }
 
-        blocks[exitIndex].activate(true);
+        blocks[exitIndex].BlockCheck(true);
     }
 
     public void StopAttack()

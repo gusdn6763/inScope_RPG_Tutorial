@@ -7,7 +7,7 @@ public class Block
     [SerializeField] private GameObject first = null, second = null;
 
     
-    public void activate(bool activate)
+    public void BlockCheck(bool activate)
     {
         first.SetActive(activate);
         second.SetActive(activate);

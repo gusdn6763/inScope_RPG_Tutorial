@@ -3,23 +3,23 @@
 public class Enemy : NPC
 {
     [SerializeField] private CanvasGroup healthGroup = null;
-    [SerializeField] float attackRange = 2f;
+    [SerializeField] float attackRange = 1f;
     [SerializeField] float extraRange = 0.2f;
-    [SerializeField] float initAggroRange;
+    [SerializeField] float initAggroRange = 0.0f;
     private IState currentState;
+
+    public Vector3 StartPosition { get; set; }
     public float AttackRange { get => attackRange; set => attackRange = value; }
     public float ExtraRange { get => extraRange; set => extraRange = value; }
     public float AggroRange { get; set; }
     public bool InRange {get { return Vector2.Distance(transform.position, Target.position) < AggroRange; } }
-
     public float AttackTime { get; set; }
 
     protected override void Start()
     {
         base.Start();
         AggroRange = initAggroRange;
-        //임시코드
-        AttackRange = 3;
+        StartPosition = transform.position;
         ChangeState(new IdleState());
     }
     public override Transform Select()
@@ -52,23 +52,14 @@ public class Enemy : NPC
 
     public override void TakeDamage(float damage, Transform source)
     {
-        SetTarget(source);
-        base.TakeDamage(damage, source);
-        OnHealthChanged(health.MyCurrentValue);
+        if (!(currentState is EvadeState))
+        {
+            SetTarget(source);
+            base.TakeDamage(damage, source);
+            OnHealthChanged(health.MyCurrentValue);
+        }
     }
 
-    private void FollowTarget()
-    {
-        if (Target != null)
-        {
-            Direction = (Target.position - transform.position).normalized;
-            transform.position = Vector2.MoveTowards(transform.position, Target.position, Speed * Time.deltaTime);
-        }
-        else
-        {
-            Direction = Vector2.zero;
-        }
-    }
     public void ChangeState(IState newState)
     {
         Debug.Log(newState);
@@ -83,7 +74,7 @@ public class Enemy : NPC
 
     public void SetTarget(Transform target)
     {
-        if (Target == null)
+        if (Target == null && !(currentState is EvadeState))
         {
             float distance = Vector2.Distance(transform.position, target.position);
             AggroRange = initAggroRange;
