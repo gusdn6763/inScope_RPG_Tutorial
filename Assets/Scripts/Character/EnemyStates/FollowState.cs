@@ -23,7 +23,6 @@ class FollowState : IState
 
             Vector3 targetPosition = parent.Target.position;
             Vector3 myPosition = parent.transform.position;
-
             parent.transform.position
                 = Vector2.MoveTowards(myPosition, targetPosition, parent.Speed * Time.deltaTime);
 
@@ -35,7 +34,7 @@ class FollowState : IState
         }
         if (!parent.InRange)
         {
-            parent.ChangeState(new IdleState());
+            parent.ChangeState(new EvadeState());
         }
     }
 }

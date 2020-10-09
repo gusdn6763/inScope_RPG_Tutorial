@@ -34,6 +34,7 @@ public class NPC : Character
     {
         if (healthChanged != null)
         {
+        //   UIManager.instance.UpdateTargetFrame(health);
             healthChanged(health);
         }
     }

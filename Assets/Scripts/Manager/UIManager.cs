@@ -1,13 +1,19 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
+
+    [SerializeField] private GameObject[] keybindButtons = null;
     [SerializeField] private Button[] actionButtons = null;
     [SerializeField] private GameObject targetFrame = null;
     [SerializeField] private Image portraitFrame = null;
+    [SerializeField] private CanvasGroup keybindMenu =  null;
+
     private Stat heathStat;
 
     private KeyCode action1, action2, action3;
@@ -26,7 +32,6 @@ public class UIManager : MonoBehaviour
     }
     void Start()
     {
-
         action1 = KeyCode.Alpha1;
         action2 = KeyCode.Alpha2;
         action3 = KeyCode.Alpha3;
@@ -46,6 +51,10 @@ public class UIManager : MonoBehaviour
         if (Input.GetKeyDown(action3))
         {
             ActionButtonOnClick(2);
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            OpenCloseMenu();
         }
     }
 
@@ -68,5 +77,18 @@ public class UIManager : MonoBehaviour
     public void UpdateTargetFrame(float health)
     {
         heathStat.MyCurrentValue = health;
+    }
+
+    public void OpenCloseMenu()
+    {
+        keybindMenu.alpha = keybindMenu.alpha > 0 ? 0 : 1;
+        keybindMenu.blocksRaycasts = (keybindMenu.blocksRaycasts) == true ? false : true;
+        Time.timeScale = Time.timeScale > 0 ? 0 : 1;
+    }
+
+    public void UpdateKeyText(string key, KeyCode code)
+    {
+        Text tmp = Array.Find(keybindButtons, x => x.name == key).GetComponentInChildren<Text>();
+        tmp.text = code.ToString();
     }
 }
