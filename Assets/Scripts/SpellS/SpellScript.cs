@@ -31,6 +31,7 @@ public class SpellScript : MonoBehaviour
         }
     }
 
+    //공격받은 몹의 TakeDamage함수를 실행해 몹의 체력을 줄임
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("HitBox") && collision.transform == MyTarget)

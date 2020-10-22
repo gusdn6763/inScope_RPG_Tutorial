@@ -36,7 +36,6 @@ public class Player : Character
 
     protected override void Update()
     {
-        //Executes the GetInput function
         GetInput();
 
         float xMinClamp = Mathf.Clamp(transform.position.x, min.x, max.x);

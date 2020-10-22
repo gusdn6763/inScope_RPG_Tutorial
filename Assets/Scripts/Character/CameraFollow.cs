@@ -15,10 +15,9 @@ public class CameraFollow : MonoBehaviour
 
     private void Start()
     {
-        // Hierarchy 뷰에서 Tag가 Player 인 객체를 찾는다.
-        target = GameObject.FindGameObjectWithTag("Player").transform;
+        player = Player.instance.GetComponent<Player>();
 
-        player = target.GetComponent<Player>();
+        target = player.transform;
 
         // 타일 좌표가 가장 낮은것과 가장 높은것의 Vector3 값을 찾는다.
         Vector3 minTile = tilemap.CellToWorld(tilemap.cellBounds.min);

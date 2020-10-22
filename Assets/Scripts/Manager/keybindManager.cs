@@ -74,6 +74,7 @@ public class KeybindManager : MonoBehaviour
         if (bindName != string.Empty)
         {
             Event e = Event.current;
+            Debug.Log(Event.current);
             if (e.isKey)
             {
                 BindKey(bindName, e.keyCode);

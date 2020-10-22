@@ -97,8 +97,7 @@ public abstract class Character : MonoBehaviour
         Animator.SetLayerWeight((int)layerName, 1);
     }
 
-
-
+    //공격 받을시
     public virtual void TakeDamage(float damage, Transform source)
     {
         health.MyCurrentValue -= damage;

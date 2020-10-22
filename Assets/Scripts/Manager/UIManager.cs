@@ -12,7 +12,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private ActionButton[] actionButtons = null;
     [SerializeField] private GameObject targetFrame = null;
     [SerializeField] private Image portraitFrame = null;
-    [SerializeField] private CanvasGroup keybindMenu =  null;
+    [SerializeField] private CanvasGroup keybindMenu = null;
     [SerializeField] private CanvasGroup spellBook = null;
 
     private Stat heathStat;
@@ -29,14 +29,7 @@ public class UIManager : MonoBehaviour
         }
         heathStat = targetFrame.GetComponentInChildren<Stat>();
     }
-    void Start()
-    {
-        SetUseable(actionButtons[0], SpellBook.instance.GetSpell("Fireball"));
-        SetUseable(actionButtons[1], SpellBook.instance.GetSpell("Frostbolt"));
-        SetUseable(actionButtons[2], SpellBook.instance.GetSpell("Lightning"));
-    }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -78,12 +71,6 @@ public class UIManager : MonoBehaviour
         Array.Find(actionButtons, x => x.gameObject.name == buttonName).MyButton.onClick.Invoke();
     }
 
-    public void SetUseable(ActionButton btn, IUseable useable)
-    {
-        btn.MyIcon.sprite = useable.Icon;
-        btn.MyIcon.color = Color.white;
-        btn.MyUseable = useable;
-    }
 
     public void OpenClose(CanvasGroup canvasGroup)
     {

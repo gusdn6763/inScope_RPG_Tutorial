@@ -2,9 +2,5 @@
 
 public interface IUseable
 {
-    Sprite Icon
-    {
-        get;
-    }
     void Use();
 }
