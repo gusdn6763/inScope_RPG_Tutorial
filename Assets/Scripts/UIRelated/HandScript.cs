@@ -7,7 +7,7 @@ public class HandScript : MonoBehaviour
 {
     public static HandScript instance;
 
-    [SerializeField]private Vector3 offset;
+    [SerializeField] private Vector3 offset = Vector3.zero;
     public IMoveable MyMoveable { get; set; }
 
     private Image icon;
@@ -47,5 +47,11 @@ public class HandScript : MonoBehaviour
         icon.color = new Color(0, 0, 0, 0);
 
         return tmp;
+    }
+
+    public void Drop()
+    {
+        MyMoveable = null;
+        icon.color = new Color(0, 0, 0, 0);
     }
 }

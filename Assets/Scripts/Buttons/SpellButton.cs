@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class SpellButton : MonoBehaviour, IPointerClickHandler
 {
-    [SerializeField] private string spellName;
+    [SerializeField] private string spellName = null; 
     public void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Left)

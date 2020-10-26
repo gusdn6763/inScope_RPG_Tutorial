@@ -40,6 +40,10 @@ public class UIManager : MonoBehaviour
         {
             OpenClose(spellBook);
         }
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            InventoryScript.instance.OpenClose();
+        }
     }
 
     public void ShowTargetFrame(NPC target)
@@ -76,5 +80,24 @@ public class UIManager : MonoBehaviour
     {
         canvasGroup.alpha = canvasGroup.alpha > 0 ? 0 : 1;
         canvasGroup.blocksRaycasts = (canvasGroup.blocksRaycasts) == true ? false : true;
+    }
+
+    public void UpdateStackSize(IClickable clickable)
+    {
+        if (clickable.MyCount > 1)
+        {
+            clickable.StackText.text = clickable.MyCount.ToString();
+            clickable.StackText.color = Color.white;
+            clickable.MyIcon.color = Color.white;
+        }
+        else
+        {
+            clickable.StackText.color = new Color(0, 0, 0, 0);
+        }
+        if (clickable.MyCount == 0)
+        {
+            clickable.MyIcon.color = new Color(0, 0, 0, 0);
+            clickable.StackText.color = new Color(0, 0, 0, 0);
+        }
     }
 }
