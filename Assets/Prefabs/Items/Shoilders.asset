@@ -9,12 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca2bba6e08393a845b64e7d2361fce56, type: 3}
-  m_Name: Bag
+  m_Script: {fileID: 11500000, guid: 1a042553797dd4549ac0b559b87cffca, type: 3}
+  m_Name: Shoilders
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: bf7d468b1c7aa5b4f81f31309a6e41f1, type: 3}
-  quality: 1
+  icon: {fileID: 21300000, guid: c672605d782926342aa8e78277957840, type: 3}
+  quality: 0
   stackSize: 0
-  title: Bag
-  bagPrefab: {fileID: 3901800978668826653, guid: e2b79fcd77fc8ab4eb4efa5b51796efa,
-    type: 3}
+  title: "\uBA4B\uC9C4 \uC204\uB354"
+  armorType: 1
+  strength: 3
+  stamina: 2
+  intellect: 1

@@ -10,12 +10,13 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private GameObject[] keybindButtons = null;
     [SerializeField] private ActionButton[] actionButtons = null;
+    [SerializeField] private GameObject tooltip = null;
     [SerializeField] private GameObject targetFrame = null;
     [SerializeField] private Image portraitFrame = null;
     [SerializeField] private CanvasGroup keybindMenu = null;
     [SerializeField] private CanvasGroup spellBook = null;
-
     private Stat heathStat;
+    private Text tooltipText;
 
     private void Awake()
     {
@@ -28,6 +29,7 @@ public class UIManager : MonoBehaviour
             Destroy(this.gameObject);
         }
         heathStat = targetFrame.GetComponentInChildren<Stat>();
+        tooltipText = tooltip.GetComponentInChildren<Text>();
     }
 
     void Update()
@@ -36,11 +38,11 @@ public class UIManager : MonoBehaviour
         {
             OpenClose(keybindMenu);
         }
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.K))
         {
             OpenClose(spellBook);
         }
-        if (Input.GetKeyDown(KeyCode.B))
+        if (Input.GetKeyDown(KeyCode.I))
         {
             InventoryScript.instance.OpenClose();
         }
@@ -71,7 +73,6 @@ public class UIManager : MonoBehaviour
 
     public void ClickActionButton(string buttonName)
     {
-        Debug.Log(buttonName);
         Array.Find(actionButtons, x => x.gameObject.name == buttonName).MyButton.onClick.Invoke();
     }
 
@@ -93,11 +94,24 @@ public class UIManager : MonoBehaviour
         else
         {
             clickable.StackText.color = new Color(0, 0, 0, 0);
+            clickable.MyIcon.color = Color.white;
         }
         if (clickable.MyCount == 0)
         {
             clickable.MyIcon.color = new Color(0, 0, 0, 0);
             clickable.StackText.color = new Color(0, 0, 0, 0);
         }
+    }
+    public void ShowTooltip(Vector3 position, IDescribable description)
+    {
+        tooltip.SetActive(true);
+        tooltip.transform.position = position;
+        tooltip.GetComponentInChildren<Text>().text = description.GetDescription();
+    }
+
+    // 튤팁UI 비활성화
+    public void HideTooltip()
+    {
+        tooltip.SetActive(false);
     }
 }

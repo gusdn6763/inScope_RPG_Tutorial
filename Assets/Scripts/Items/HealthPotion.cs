@@ -11,4 +11,9 @@ public class HealthPotion : Item, IUseable
         Remove();
         Player.instance.Health.MyCurrentValue += health;
     }
+
+    public override string GetDescription()
+    {
+        return base.GetDescription() + string.Format("\n<color=#00ff00ff>Use: 체력을 {0} 회복시켜준다</color>", health);
+    }
 }

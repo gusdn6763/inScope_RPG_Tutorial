@@ -17,12 +17,29 @@ public class BagScript : MonoBehaviour
     {
         canvasGroup = GetComponent<CanvasGroup>();
     }
+
+    public List<Item> GetItem()
+    {
+        List<Item> items = new List<Item>();
+        foreach (SlotScript slot in slots)
+        {
+            if (!slot.IsEmpty)
+            {
+                foreach(Item item in slot.Items)
+                {
+                    items.Add(item);
+                }
+            }
+        }
+        return items;
+    }
     // 받은 수만큼 슬롯을 추가해줌  
     public void AddSlots(int slotCount)
     {
         for (int i = 0; i < slotCount; i++)
         {
             SlotScript slot = Instantiate(slotPrefab, transform).GetComponent<SlotScript>();
+            slot.MyBag = this;
             Slots.Add(slot);
         }
     }
@@ -39,10 +56,24 @@ public class BagScript : MonoBehaviour
                 return true;
             }
         }
-
         return false;
     }
 
+    public int MyEmptySlotCount
+    {
+        get
+        {
+            int count = 0;
+            foreach (SlotScript slot in Slots)
+            {
+                if (slot.IsEmpty)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+    }
 
     public void OpenClose()
     {
