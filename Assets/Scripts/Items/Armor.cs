@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-enum ArmorType { Helmet, Shoulders, Chest, Gloves, Feet, MainHand, Offhand, TwoHand }
+enum ArmorType { Helmet, Shoulders, Chest, Gloves, Pants, Boots, MainHand, Offhand, TwoHand }
 
 // 상단 메뉴에 명령버튼 추가.
 [CreateAssetMenu(fileName = "Armor", menuName = "Items/Armor", order = 2)]
 public class Armor : Item
 {
+    [SerializeField] private AnimationClip[] animationClips;
+
     [SerializeField] private ArmorType armorType;
 
     // 힘
@@ -19,6 +21,8 @@ public class Armor : Item
     // 지력
     [SerializeField] private int intellect;
 
+    internal ArmorType ArmorType { get => armorType; }
+    public AnimationClip[] MyAnimationClip { get => animationClips; }
 
     public override string GetDescription()
     {
@@ -39,5 +43,10 @@ public class Armor : Item
 
         // 원래 설명글 + 아이템 능력치를 반환
         return base.GetDescription() + stats;
+    }
+
+    public void Equip()
+    {
+        CharacterPanel.instance.EquipArmor(this);
     }
 }

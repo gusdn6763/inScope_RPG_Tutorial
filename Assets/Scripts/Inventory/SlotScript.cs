@@ -21,16 +21,19 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
         {
             if (!IsEmpty)
             {
-                return Items.Peek();
+                return MyItems.Peek();
             }
             return null;
         }
     }
+    public ObservableStack<Item> MyItems { get => items; }
+
+
     public Image MyIcon { get { return icon; } set { icon = value; } }
 
-    public int MyCount { get { return Items.Count; } }
+    public int MyCount { get { return MyItems.Count; } }
     // 빈 슬롯 여부
-    public bool IsEmpty { get { return Items.Count == 0; } }
+    public bool IsEmpty { get { return MyItems.Count == 0; } }
     // 해당 슬롯이 가득 찼는지 확인
     public bool IsFull
     {
@@ -47,18 +50,16 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
 
     public Text StackText { get { return stackSize; } }
 
-    public ObservableStack<Item> Items { get => items; }
-
     private void Awake()
     {
-        Items.OnPop += new UpdateStackEvent(UpdateSlot);
-        Items.OnPush += new UpdateStackEvent(UpdateSlot);
-        Items.OnClear += new UpdateStackEvent(UpdateSlot);
+        MyItems.OnPop += new UpdateStackEvent(UpdateSlot);
+        MyItems.OnPush += new UpdateStackEvent(UpdateSlot);
+        MyItems.OnClear += new UpdateStackEvent(UpdateSlot);
     }
     // 슬롯에 아이템 추가.
     public bool AddItem(Item item)
     {
-        Items.Push(item);
+        MyItems.Push(item);
         icon.sprite = item.Icon;
         icon.color = Color.white;
         item.MySlot = this;
@@ -67,18 +68,34 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        //왼쪽 클릭시 -> 아이템을 집고있는상태와 아이템을 집고있지 않는 상태로 나눌 수 있음  
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            //처음에 슬롯의 아이템 선택시 ChoosedSlot값은 비어있음
-            //슬롯의 아이템을 집을시 InventoryScript.instance.ChoosedSlot = this;값을 넣음  
+            //처음에 슬롯의 아이템 선택시 ChoosedSlot값과 Dragable값은 비어있음
+            //아직 선택한 슬롯이 없고, 드래그한 아이템도 없으므포
+            //선택중일 슬롯도 없고, 슬롯에 무언가가 존재할시
             if (InventoryScript.instance.ChoosedSlot == null && !IsEmpty)
             {
-                //집은 아이템이 존재하고 집은 아이템이 가방일시  
-                if (HandScript.instance.Dragable != null && HandScript.instance.Dragable is Bag)
+                //무언가를 드래그한것이 있을시
+                if (HandScript.instance.Dragable != null )
                 {
-                    if (MyItem is Bag)
+                    //집은 아이템이 가방일시
+                    if (HandScript.instance.Dragable is Bag)
                     {
-                        InventoryScript.instance.SwapBags(HandScript.instance.Dragable as Bag, MyItem as Bag);
+                        if (MyItem is Bag)
+                        {
+                            InventoryScript.instance.SwapBags(HandScript.instance.Dragable as Bag, MyItem as Bag);
+                        }
+                    }
+                    //집은 아이템이 장비일시
+                    else if (HandScript.instance.Dragable is Armor)
+                    {
+                        Debug.Log(MyItem);
+                        if (MyItem is Armor && (MyItem as Armor).ArmorType == (HandScript.instance.Dragable as Armor).ArmorType)
+                        {
+                            (MyItem as Armor).Equip();
+                            HandScript.instance.Drop();
+                        }
                     }
                 }
                 else
@@ -89,16 +106,28 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
                 }
 
             }
-            //만약 잡은게 없고, 선택한 슬롯이 비어있고, 가방을 선택했으면
-            else if (InventoryScript.instance.ChoosedSlot == null && IsEmpty && HandScript.instance.Dragable is Bag)
+            //선택한 슬롯이 없고, 드래그로 선택한 슬롯이 비어있을시 -> 
+            //인벤토리의 슬롯에만 제한되는것이아닌 장비창 또는 스킬창에서 드래그도 가능하다
+            else if (InventoryScript.instance.ChoosedSlot == null && IsEmpty)
             {
-                //가방을 추가, 가방 삭제, 아이템을 놓음
-                Bag bag = (Bag)HandScript.instance.Dragable;
-
-                if (bag.MyBagScript != MyBag && InventoryScript.instance.MyEmptySlotCount - bag.Slots > 0)
+                if (HandScript.instance.Dragable is Bag)
                 {
-                    AddItem(bag);
-                    bag.MyBagButton.RemoveBag();
+                    //가방을 추가, 가방 삭제, 아이템을 놓음
+                    Bag bag = (Bag)HandScript.instance.Dragable;
+
+                    if (bag.MyBagScript != MyBag && InventoryScript.instance.MyEmptySlotCount - bag.Slots > 0)
+                    {
+                        AddItem(bag);
+                        bag.MyBagButton.RemoveBag();
+                        HandScript.instance.Drop();
+                    }
+                }
+                //장비를 다시 슬롯에 내려놓음
+                else if (HandScript.instance.Dragable is Armor)
+                {
+                    Armor armor = (Armor)HandScript.instance.Dragable;
+                    AddItem(armor);
+                    CharacterPanel.instance.MyCharButton.DequipArmor();
                     HandScript.instance.Drop();
                 }
             }
@@ -107,18 +136,19 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
             {
                 //아이템을 되돌려놓는지 확인하는 함수, 아이템을 확인 후 합치는 함수, 아이템의 위치를 바꾸는 함수
                 //아이템을 빈 슬롯에 넣는지 확인하는 함수  
-                if (PutItemBack() 
-                   || MergeItems(InventoryScript.instance.ChoosedSlot) 
-                   || SwapItems(InventoryScript.instance.ChoosedSlot) 
-                   || AddItems(InventoryScript.instance.ChoosedSlot.Items))
+                if (PutItemBack()  || MergeItems(InventoryScript.instance.ChoosedSlot) || SwapItems(InventoryScript.instance.ChoosedSlot)  || AddItems(InventoryScript.instance.ChoosedSlot.MyItems))
                 {
-                    //아이템을 놓고, 초기화
+                    MyIcon.color = Color.white;
                     HandScript.instance.Drop();
+                    //아이템을 놓고, 초기화
                     InventoryScript.instance.ChoosedSlot = null;
+                    
+                    
                 }
             }
         }
-        if (eventData.button == PointerEventData.InputButton.Right)
+        //오른쪽 버튼을 클릭하고, 드래그한것이 없을때
+        if (eventData.button == PointerEventData.InputButton.Right && HandScript.instance.Dragable == null)
         {
             UseItem();
         }
@@ -143,14 +173,14 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
         }
         if (from.MyItem.GetType() != MyItem.GetType() || from.MyCount + MyCount > MyItem.StackSize)
         {
-            ObservableStack<Item> tmpFrom = new ObservableStack<Item>(from.Items);
+            ObservableStack<Item> tmpFrom = new ObservableStack<Item>(from.MyItems);
 
             // 아이템을 옮기기 때문에 초기화
-            from.Items.Clear();
+            from.MyItems.Clear();
             // from 슬롯의 아이템 리스트에 해당 슬롯의 아이템리스트 전달
-            from.AddItems(Items);
+            from.AddItems(MyItems);
             // 현재 슬롯의 아이템 리스트 초기화
-            Items.Clear();
+            MyItems.Clear();
             // 현재 슬롯의 아이템 리스트를 tmpFrom 으로 변경
             AddItems(tmpFrom);
             return true;
@@ -179,9 +209,7 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
 
             return true;
         }
-
         return false;
-
     }
 
     public void UseItem()
@@ -192,6 +220,10 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
             // 해당 아이템을 사용한다.
             (MyItem as IUseable).Use();
         }
+        else if (MyItem is Armor)
+        {
+            (MyItem as Armor).Equip();
+        }
     }
 
 
@@ -199,7 +231,7 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
     {
         if (!IsEmpty)
         {
-            Items.Pop();
+            MyItems.Pop();
         }
     }    
 
@@ -208,21 +240,15 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
         // 자기 자신이 빈슬롯이 아니라면
         if (!IsEmpty)
         {
-            InventoryScript.instance.OnItemCountChanged(Items.Pop());
-
-            //if (MyCount == 0)
-            //{
-            //    MyIcon.color = new Color(0, 0, 0, 0);
-            //}
-
+            InventoryScript.instance.OnItemCountChanged(MyItems.Pop());
         }
     }
 
     public bool StackItem(Item item)
     {
-        if (!IsEmpty && item.name == MyItem.name && Items.Count < MyItem.StackSize)
+        if (!IsEmpty && item.name == MyItem.name && MyItems.Count < MyItem.StackSize)
         {
-            Items.Push(item);
+            MyItems.Push(item);
             item.MySlot = this;
             return true;
         }
@@ -241,6 +267,9 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
         {
             return false;
         }
+
+        Debug.Log(from.MyItem.GetType() +""+ MyItem.GetType());
+    
         //클릭한from에 있는 아이템이 현재 슬롯의 아이템과 같고, 꽉 차있지 않으면
         if (from.MyItem.GetType() == MyItem.GetType() && !IsFull)
         {
@@ -249,18 +278,20 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
 
             for(int i = 0; i < free; i++)
             {
-                AddItem(from.Items.Pop());
+                AddItem(from.MyItems.Pop());
             }
         }
+        from.MyIcon.color = Color.white;
+        MyItem.MySlot.MyIcon.color = Color.white;
         return true;
     }
 
     public void Clear()
     {
-        if (Items.Count > 0)
+        if (MyItems.Count > 0)
         {
-            InventoryScript.instance.OnItemCountChanged(Items.Pop());
-            Items.Clear();
+            InventoryScript.instance.OnItemCountChanged(MyItems.Pop());
+            MyItems.Clear();
         }
     }
 
@@ -268,7 +299,7 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
     {
         if (!IsEmpty)
         {
-            UIManager.instance.ShowTooltip(transform.position, MyItem);
+            UIManager.instance.ShowTooltip(new Vector2(1, 0), transform.position, MyItem);
         }
     }
 

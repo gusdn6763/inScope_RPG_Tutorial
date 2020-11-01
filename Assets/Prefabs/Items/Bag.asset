@@ -15,6 +15,6 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: bf7d468b1c7aa5b4f81f31309a6e41f1, type: 3}
   quality: 1
   stackSize: 0
-  title: Bag
+  title: "\uAC00\uBC29"
   bagPrefab: {fileID: 3901800978668826653, guid: e2b79fcd77fc8ab4eb4efa5b51796efa,
     type: 3}

@@ -47,4 +47,9 @@ public class NPC : Character
         }
         Destroy(this.gameObject);
     }
+
+    public virtual void Interact()
+    {
+        Debug.Log("곧 대화창이 열림");
+    }
 }

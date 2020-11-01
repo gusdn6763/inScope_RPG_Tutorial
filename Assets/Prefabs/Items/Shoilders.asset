@@ -16,6 +16,19 @@ MonoBehaviour:
   quality: 0
   stackSize: 0
   title: "\uBA4B\uC9C4 \uC204\uB354"
+  animationClips:
+  - {fileID: 7400000, guid: 43e1f5b626d9f3c45baab33278124f0f, type: 2}
+  - {fileID: 7400000, guid: 52be91e5e4cbfbe41b16735d0859c021, type: 2}
+  - {fileID: 7400000, guid: 80dfa0f9703f9d74ab8a9b50040d4955, type: 2}
+  - {fileID: 7400000, guid: 4ead1810bd2f3e742a19da54c1ea574a, type: 2}
+  - {fileID: 7400000, guid: 00b06a15bb92474479864d24bf3f76e5, type: 2}
+  - {fileID: 7400000, guid: 50e2dc7c925388040819acd6fbda5736, type: 2}
+  - {fileID: 7400000, guid: 3245fbc620c76774cb2aa5cd929648a5, type: 2}
+  - {fileID: 7400000, guid: 59e4e6858fe66c94e92e1297cb98b352, type: 2}
+  - {fileID: 7400000, guid: 5c4259e57f712cb4a833ff30d533bd4d, type: 2}
+  - {fileID: 7400000, guid: a6b6c5375c62a7942b807a792dad8236, type: 2}
+  - {fileID: 7400000, guid: 64e91b3c420e8a14dad90b18baaea4ad, type: 2}
+  - {fileID: 7400000, guid: d5fcde19ea97f5b4188f4fa304c04a65, type: 2}
   armorType: 1
   strength: 3
   stamina: 2

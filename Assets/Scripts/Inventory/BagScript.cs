@@ -25,7 +25,7 @@ public class BagScript : MonoBehaviour
         {
             if (!slot.IsEmpty)
             {
-                foreach(Item item in slot.Items)
+                foreach(Item item in slot.MyItems)
                 {
                     items.Add(item);
                 }

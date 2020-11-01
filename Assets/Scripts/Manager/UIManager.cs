@@ -10,6 +10,8 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private GameObject[] keybindButtons = null;
     [SerializeField] private ActionButton[] actionButtons = null;
+    [SerializeField] private CharacterPanel characterPanel = null;
+    [SerializeField] private RectTransform tooltipRect;
     [SerializeField] private GameObject tooltip = null;
     [SerializeField] private GameObject targetFrame = null;
     [SerializeField] private Image portraitFrame = null;
@@ -28,6 +30,7 @@ public class UIManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+        tooltipRect = tooltip.GetComponent<RectTransform>();
         heathStat = targetFrame.GetComponentInChildren<Stat>();
         tooltipText = tooltip.GetComponentInChildren<Text>();
     }
@@ -45,6 +48,10 @@ public class UIManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.I))
         {
             InventoryScript.instance.OpenClose();
+        }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            characterPanel.OpenClose();
         }
     }
 
@@ -102,8 +109,17 @@ public class UIManager : MonoBehaviour
             clickable.StackText.color = new Color(0, 0, 0, 0);
         }
     }
-    public void ShowTooltip(Vector3 position, IDescribable description)
+
+    public void ClearStackCount(IClickable clickable)
     {
+        clickable.StackText.color = new Color(0, 0, 0, 0);
+        clickable.MyIcon.color = Color.white;
+    }
+
+    public void ShowTooltip(Vector2 pivot, Vector3 position, IDescribable description)
+    {
+        //피벗을 따로 선언해주는 이유 : 장비창에서 왼쪽의 장비한 아이템이 화면을 넘어가서 반대로 설명창 UI를 표현하기 위해
+        tooltipRect.pivot = pivot;
         tooltip.SetActive(true);
         tooltip.transform.position = position;
         tooltip.GetComponentInChildren<Text>().text = description.GetDescription();
@@ -113,5 +129,10 @@ public class UIManager : MonoBehaviour
     public void HideTooltip()
     {
         tooltip.SetActive(false);
+    }
+
+    public void RefreshTooltip(IDescribable description)
+    {
+        tooltipText.text = description.GetDescription();
     }
 }

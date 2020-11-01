@@ -79,8 +79,11 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
         }
         else
         {
+            useables.Clear();
             this.MyUseable = useable;
         }
+
+        count = useables.Count;
         UpdateVisual();
     }
 
@@ -93,6 +96,10 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
         if (count > 1)
         {
             UIManager.instance.UpdateStackSize(this);
+        }
+        else if (MyUseable is Spell)
+        {
+            UIManager.instance.ClearStackCount(this);
         }
     }
     public void UpdateItemCount(Item item)
@@ -119,7 +126,6 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
 
         // 액션 버튼에 등록된 것이 스킬이라면
         //아이템도 MyUseable인터페이스가 존재하지만 SetUseable함수에서 MyUseable변수를 할당해주는것은 스킬뿐
-        Debug.Log(MyUseable);
         if (MyUseable != null && MyUseable is IDescribable)
         {
             tmp = (IDescribable)MyUseable;
@@ -132,7 +138,7 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
         }
         if (tmp != null)
         {
-            UIManager.instance.ShowTooltip(transform.position, tmp);
+            UIManager.instance.ShowTooltip(new Vector2(1, 0), transform.position, tmp);
         }
     }
 

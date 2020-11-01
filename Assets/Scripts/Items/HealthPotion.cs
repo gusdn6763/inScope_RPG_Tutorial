@@ -14,6 +14,6 @@ public class HealthPotion : Item, IUseable
 
     public override string GetDescription()
     {
-        return base.GetDescription() + string.Format("\n<color=#00ff00ff>Use: 체력을 {0} 회복시켜준다</color>", health);
+        return base.GetDescription() + string.Format("\n사용시 체력을 {0} 회복시켜준다", health);
     }
 }

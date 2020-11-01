@@ -62,7 +62,7 @@ public class InventoryScript : MonoBehaviour
 
             if (value != null)
             {
-                fromSlot.MyIcon.color = Color.gray;
+                fromSlot.MyIcon.color = Color.grey;
             }
         }
     }
@@ -83,25 +83,27 @@ public class InventoryScript : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            Bag bag = (Bag)Instantiate(items[0]);
+            Bag bag = (Bag)Instantiate(items[9]);
             bag.Initalize(8);
             bag.Use();
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            Bag bag = (Bag)Instantiate(items[0]);
+            Bag bag = (Bag)Instantiate(items[9]);
             bag.Initalize(16);
             AddItem(bag);
         }
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            HealthPotion potion = (HealthPotion)Instantiate(items[1]);    
-            AddItem(potion);
-        }
         if (Input.GetKeyDown(KeyCode.H))
         {
-            Armor armor = (Armor)Instantiate(items[2]);
-            AddItem(armor);
+            AddItem((HealthPotion)Instantiate(items[0]));
+            AddItem((Armor)Instantiate(items[1]));
+            AddItem((Armor)Instantiate(items[2]));
+            AddItem((Armor)Instantiate(items[3]));
+            AddItem((Armor)Instantiate(items[4]));
+            AddItem((Armor)Instantiate(items[5]));
+            AddItem((Armor)Instantiate(items[6]));
+            AddItem((Armor)Instantiate(items[7]));
+            AddItem((Armor)Instantiate(items[8]));
         }
     }
 
@@ -175,16 +177,16 @@ public class InventoryScript : MonoBehaviour
             }
         }
     }
-    public void AddItem(Item item)
+    public bool AddItem(Item item)
     {
         if (item.StackSize > 0)
         {
             if (PlaceInStack(item))
             {
-                return;
+                return true;
             }
         }
-        PlaceInEmpty(item);
+        return PlaceInEmpty(item);
     }
 
     //갯수 쌓기
@@ -204,15 +206,17 @@ public class InventoryScript : MonoBehaviour
         return false;
     }
 
-    private void PlaceInEmpty(Item item)
+    private bool PlaceInEmpty(Item item)
     {
         foreach (Bag bag in bags)
         {
             if (bag.MyBagScript.AddItem(item))
             {
-                return;
+                OnItemCountChanged(item);
+                return true;
             }
         }
+        return false;
     }
 
     public Stack<IUseable> GetUseables(IUseable type)
@@ -229,7 +233,7 @@ public class InventoryScript : MonoBehaviour
                 // 퀵슬롯에 등록된 아이템이 type의 아이템과 같은 종류의 아이템이라면
                 if (!slot.IsEmpty && slot.MyItem.GetType() == type.GetType())
                 {
-                    foreach (Item item in slot.Items)
+                    foreach (Item item in slot.MyItems)
                     {
                         // useables 에 담는다.
                         useables.Push(item as IUseable);

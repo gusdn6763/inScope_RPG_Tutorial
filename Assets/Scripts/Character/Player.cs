@@ -7,9 +7,11 @@ public class Player : Character
 {
     public static Player instance;
 
+    [SerializeField] private GearSocket[] gearSockets;
     [SerializeField] private Stat mana = null;
     [SerializeField] private Block[] blocks = null;
     [SerializeField] protected Transform[] exitPoint = null;
+
     private Vector3 min, max;
 
     private float initMana = 50;
@@ -43,6 +45,19 @@ public class Player : Character
 
         transform.position = new Vector3(xMinClamp, yMinClamp, transform.position.z);
         base.Update();
+    }
+
+    public override void HandleLayers()
+    {
+        base.HandleLayers();
+
+        if (IsMoving)
+        {
+            foreach(GearSocket g in gearSockets)
+            {
+                g.SetXAndY(Direction.x, Direction.y);
+            }
+        }
     }
 
     private void GetInput()
@@ -112,6 +127,11 @@ public class Player : Character
         isAttacking = true;
         Animator.SetBool("Attack", isAttacking);
 
+        foreach (GearSocket g in gearSockets)
+        {
+            g.MyAnimator.SetBool("Attack", isAttacking);
+        }
+
         yield return new WaitForSeconds(newSpell.CastTime);
 
         if (currentTarget != null && InLineOfSight())
@@ -164,11 +184,28 @@ public class Player : Character
     public void StopAttack()
     {
         SpellBook.instance.StopCasting();
+        isAttacking = false;
+        Animator.SetBool("Attack", isAttacking);
+
+        foreach (GearSocket g in gearSockets)
+        {
+            g.MyAnimator.SetBool("Attack", isAttacking);
+        }
+
         if (attackRoutine != null)
         {
             StopCoroutine(attackRoutine);
-            isAttacking = false;
-            Animator.SetBool("Attack", isAttacking);
+            
+        }
+    }
+
+    public override void ActivateLayer(LayerName layerName)
+    {
+        base.ActivateLayer(layerName);
+
+        foreach (GearSocket g in gearSockets)
+        {
+            g.ActivateLayer(layerName);
         }
     }
 }
