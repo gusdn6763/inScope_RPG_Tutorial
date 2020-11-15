@@ -8,7 +8,7 @@ using UnityEngine;
 public class Bag : Item, IUseable
 {
     [SerializeField] protected GameObject bagPrefab;
-    private int slots;
+    [SerializeField] private int slots;
 
     public BagScript MyBagScript { get; set; }
 

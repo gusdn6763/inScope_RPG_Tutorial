@@ -22,7 +22,7 @@ public class Armor : Item
     [SerializeField] private int intellect;
 
     internal ArmorType ArmorType { get => armorType; }
-    public AnimationClip[] MyAnimationClip { get => animationClips; }
+    public AnimationClip[] MyAnimationClips { get => animationClips; }
 
     public override string GetDescription()
     {

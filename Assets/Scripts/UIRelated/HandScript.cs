@@ -46,7 +46,7 @@ public class HandScript : MonoBehaviour
     public void TakeMoveable(IMoveable moveable)
     {
         this.Dragable = moveable;
-        icon.sprite = moveable.Icon;
+        icon.sprite = moveable.MyIcon;
         icon.color = Color.white;
     }
 
@@ -74,8 +74,18 @@ public class HandScript : MonoBehaviour
         // Dragable인터페이스를 포함한 아이템이고, 선택가능한 슬롯이면
         if (Dragable is Item && InventoryScript.instance.ChoosedSlot != null)
         {
-            // 모두 만족하면 해당 슬롯의 모든 아이템을 삭제한다.
-            (Dragable as Item).MySlot.Clear();
+            Item item = (Item)Dragable;
+
+            //아이템이 어떠한 슬롯에 있는 상태라면
+            if (item.MySlot != null)
+            {
+                // 모두 만족하면 해당 슬롯의 모든 아이템을 삭제한다.
+                (Dragable as Item).MySlot.Clear();
+            }
+            else if (item.MyCharButton != null)
+            {
+                item.MyCharButton.DequipArmor();
+            }
         }
         // HandScript 의 아이콘 정보 초기화
         Drop();

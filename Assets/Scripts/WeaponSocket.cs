@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class WeaponSocket : GearSocket
 {
-    private SpriteRenderer parentRenderer;
+    [SerializeField] private SpriteRenderer parentRenderer;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         spriteRenderer = GetComponentInParent<SpriteRenderer>();
     }
     private float currentY;

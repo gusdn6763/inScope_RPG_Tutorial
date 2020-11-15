@@ -19,16 +19,16 @@ MonoBehaviour:
   animationClips:
   - {fileID: 7400000, guid: cde7039f3eea8fe40bf4d4f7d30c76ac, type: 2}
   - {fileID: 7400000, guid: f704421bcf9f13b408f95df281508124, type: 2}
-  - {fileID: 7400000, guid: 6da3b04c69f287749be22168bebb2e36, type: 2}
-  - {fileID: 7400000, guid: 87a62d7a6c18e434d83ed722ec1ff998, type: 2}
-  - {fileID: 7400000, guid: 03aa1c727d000d94f9ff172dc561fe6d, type: 2}
-  - {fileID: 7400000, guid: 7ab5aa6addc8163449c9dc27b80d1d2d, type: 2}
-  - {fileID: 7400000, guid: 05010807c648013439a2b474c7a539e9, type: 2}
-  - {fileID: 7400000, guid: abccac0961e79be43879167625f0490e, type: 2}
-  - {fileID: 7400000, guid: 5ebbf9b334ace2c4b8d80d7e919e9254, type: 2}
-  - {fileID: 7400000, guid: 14d26938a219d034fb5256886cc15ce7, type: 2}
-  - {fileID: 7400000, guid: a2583802439910c47a52aa174aeb9854, type: 2}
-  - {fileID: 7400000, guid: 7cf238c926dde2749950b28b021afb01, type: 2}
+  - {fileID: 7400000, guid: 52457e070b4d17342a19258ce2bcb668, type: 2}
+  - {fileID: 7400000, guid: 970b74ccc84dc034ab80345c98619011, type: 2}
+  - {fileID: 7400000, guid: 3e2dd2a6cd88f82479430666f14967d1, type: 2}
+  - {fileID: 7400000, guid: 025b05a4be6623b4792030bc01244be1, type: 2}
+  - {fileID: 7400000, guid: 3269ca63aeeee53408223eac406ac0c6, type: 2}
+  - {fileID: 7400000, guid: 1112461e07f3d754c9e02a6dbc63a332, type: 2}
+  - {fileID: 7400000, guid: 3d2b7196cc250fe478824a723bf2771a, type: 2}
+  - {fileID: 7400000, guid: e0a7d1803c6c79f4bb47e428394765f3, type: 2}
+  - {fileID: 7400000, guid: d6cd797c2ed41d54c93f409efb194b2b, type: 2}
+  - {fileID: 7400000, guid: 8dbe2a7e45a386849851d832f13b1778, type: 2}
   armorType: 5
   strength: 3
   stamina: 2

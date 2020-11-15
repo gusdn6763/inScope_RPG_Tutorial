@@ -71,7 +71,6 @@ public class Enemy : NPC
 
     public void ChangeState(IState newState)
     {
-        Debug.Log(newState);
         if (currentState != null)
         {
             currentState.Exit();
@@ -106,5 +105,9 @@ public class Enemy : NPC
         {
             lootTable.ShowLoot();
         }
+    }
+    public override void StopInteract()
+    {
+        LootWindow.instance.Close();
     }
 }

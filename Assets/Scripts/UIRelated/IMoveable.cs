@@ -4,5 +4,5 @@ using UnityEditor;
 
 public interface IMoveable
 {
-    Sprite Icon { get; }
+    Sprite MyIcon { get; }
 }

@@ -13,6 +13,8 @@ public class CharButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
     //현재 장착된 장비 아이템을 표시
     private Image icon;
 
+    public CharButton MyCharButton { get; set; }
+
     private void Awake()
     {
         icon = GetComponentInChildren<Image>();
@@ -69,18 +71,20 @@ public class CharButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
         }
         // 비활성화된 유니티상의 인스펙터에서 Image컴포넌트를 활성화
         icon.enabled = true;
-        icon.sprite = armor.Icon;
+        icon.sprite = armor.MyIcon;
         this.equippedArmor = armor;
         icon.color = Color.white;
+        this.equippedArmor.MyCharButton = this;
+
         if (HandScript.instance.Dragable == (armor as IMoveable))
         {
             HandScript.instance.Drop();
         }
 
         //gearSocket이 널값이 아닌지 체크하는 이유 : 보조장비, 장갑같은경우 장비를 해도 플레이어가 장비한 장비를 보여주지 않음  
-        if (gearSocket != null && equippedArmor.MyAnimationClip != null)
+        if (gearSocket != null && equippedArmor.MyAnimationClips != null)
         {
-            gearSocket.Equip(equippedArmor.MyAnimationClip);
+            gearSocket.Equip(equippedArmor.MyAnimationClips);
         }
     }
 
@@ -107,10 +111,11 @@ public class CharButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
         icon.color = Color.white;
         icon.enabled = false;
 
-        if (gearSocket != null && equippedArmor.MyAnimationClip != null)
+        if (gearSocket != null && equippedArmor.MyAnimationClips != null)
         {
             gearSocket.Dequip();
         }
         equippedArmor = null;
+        equippedArmor.MyCharButton = null;
     }
 }

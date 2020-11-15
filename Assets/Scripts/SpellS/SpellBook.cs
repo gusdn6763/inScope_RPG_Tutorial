@@ -34,7 +34,7 @@ public class SpellBook : MonoBehaviour
 
         castingBar.fillAmount = 0f;
         castingBar.color = spell.BarColor;
-        spellIcon.sprite = spell.Icon;
+        spellIcon.sprite = spell.MyIcon;
         currentSpell.text = spell.Name;
         spellCastingTime.text = spell.CastTime.ToString();
         spellCoroutine = StartCoroutine(Progress(spell));

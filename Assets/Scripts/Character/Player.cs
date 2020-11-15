@@ -12,10 +12,15 @@ public class Player : Character
     [SerializeField] private Block[] blocks = null;
     [SerializeField] protected Transform[] exitPoint = null;
 
+    //NPC, 몹등과 상호작용하기 위함  
+    private IInteractable interactable;
+
     private Vector3 min, max;
 
     private float initMana = 50;
     private int exitIndex;
+
+    public int MyGold { get; set; }
 
     protected override void Awake()
     {
@@ -34,6 +39,7 @@ public class Player : Character
     {
         base.Start();
         mana.Initialize(initMana, initMana);
+        MyGold = 10;
     }
 
     protected override void Update()
@@ -206,6 +212,34 @@ public class Player : Character
         foreach (GearSocket g in gearSockets)
         {
             g.ActivateLayer(layerName);
+        }
+    }
+
+    public void Interact()
+    {
+        if (interactable != null)
+        {
+            interactable.Interact();
+        }
+    }
+
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Enemy") || collision.CompareTag("Interactable"))
+        {
+            interactable = collision.GetComponent<IInteractable>();
+        }
+    }
+
+    public void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Enemy") || collision.CompareTag("Interactable"))
+        {
+            if (interactable != null)
+            {
+                interactable.StopInteract();
+                interactable = null;
+            }
         }
     }
 }

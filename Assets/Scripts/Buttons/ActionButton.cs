@@ -90,7 +90,7 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
     public void UpdateVisual()
     {
 
-        MyIcon.sprite = HandScript.instance.Put().Icon;
+        MyIcon.sprite = HandScript.instance.Put().MyIcon;
         MyIcon.color = Color.white;
 
         if (count > 1)

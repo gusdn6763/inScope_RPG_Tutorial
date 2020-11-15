@@ -60,7 +60,7 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
     public bool AddItem(Item item)
     {
         MyItems.Push(item);
-        icon.sprite = item.Icon;
+        icon.sprite = item.MyIcon;
         icon.color = Color.white;
         item.MySlot = this;
         return true;

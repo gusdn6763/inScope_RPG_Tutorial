@@ -83,7 +83,7 @@ public class LootWindow : MonoBehaviour
                 if (pages[pageIndex][i] != null)
                 {
                     // 아이콘 설정
-                    lootbuttons[i].MyIcon.sprite = pages[pageIndex][i].Icon;
+                    lootbuttons[i].MyIcon.sprite = pages[pageIndex][i].MyIcon;
 
                     lootbuttons[i].MyLoot = pages[pageIndex][i];
 
@@ -91,7 +91,7 @@ public class LootWindow : MonoBehaviour
                     lootbuttons[i].gameObject.SetActive(true);
 
                     // 아이템 제목 설정
-                    string title = string.Format("<color={0}>{1}</color>", QualityColor.MyColors[pages[pageIndex][i].Quality], pages[pageIndex][i].Title);
+                    string title = string.Format("<color={0}>{1}</color>", QualityColor.MyColors[pages[pageIndex][i].MyQuality], pages[pageIndex][i].MyTitle);
                     lootbuttons[i].MyTitle.text = title;
                 }
             }

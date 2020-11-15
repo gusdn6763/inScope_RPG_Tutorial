@@ -16,6 +16,19 @@ MonoBehaviour:
   quality: 0
   stackSize: 0
   title: "\uBA4B\uC9C4 \uAC80"
+  animationClips:
+  - {fileID: 7400000, guid: 182f062a6506d094f8c9c19cc6181673, type: 2}
+  - {fileID: 7400000, guid: dd0426eb57a24f846bcd0c56ca770b4d, type: 2}
+  - {fileID: 7400000, guid: fd906ae0729ba104f87a2e3a0edeac92, type: 2}
+  - {fileID: 7400000, guid: a3131c0d209fd2a40b0fb5752c6b567d, type: 2}
+  - {fileID: 7400000, guid: 39f8f78cb72b40a4c8889a33980dd606, type: 2}
+  - {fileID: 7400000, guid: 5cc2f4f1aac481046b5d7d1b0d0662ec, type: 2}
+  - {fileID: 7400000, guid: 066af9fd63252764188fe4aeef24a547, type: 2}
+  - {fileID: 7400000, guid: 4bc6005fe13a88c45a7083b39fabf111, type: 2}
+  - {fileID: 7400000, guid: 8158d0fe9f8329f49abc7691c765c27a, type: 2}
+  - {fileID: 7400000, guid: 9aadeeb036d9d9a4a81da1ebdf873fc9, type: 2}
+  - {fileID: 7400000, guid: 17ee358ee7643c94cb696f56958572ff, type: 2}
+  - {fileID: 7400000, guid: 00e57bb196bbeec48be7de1902bed1ab, type: 2}
   armorType: 6
   strength: 5
   stamina: 3

@@ -23,7 +23,7 @@ public class Spell : IUseable, IMoveable, IDescribable
         }
     }
 
-    public Sprite Icon
+    public Sprite MyIcon
     {
         get
         {

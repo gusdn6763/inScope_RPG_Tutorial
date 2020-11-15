@@ -5,8 +5,9 @@ using UnityEngine;
 public class GearSocket : MonoBehaviour
 {
     private AnimatorOverrideController animatorOverrideController;
-    protected SpriteRenderer spriteRenderer;
     private Animator parentAnimator;
+
+    protected SpriteRenderer spriteRenderer;
 
     public Animator MyAnimator { get; set; }
 
@@ -18,13 +19,15 @@ public class GearSocket : MonoBehaviour
         DeathLayer = 3,
     }
 
-    private void Awake()
+    protected virtual void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         parentAnimator = GetComponentInParent<Animator>();
         MyAnimator = GetComponent<Animator>();
 
+        //소켓오브젝트의 animator 컴포넌트의 GearController을 알기위함 인것같음  
         animatorOverrideController = new AnimatorOverrideController(MyAnimator.runtimeAnimatorController);
+        //3가지의 4개 애니메이션 어쩌구를 사용하기위함... 
         MyAnimator.runtimeAnimatorController = animatorOverrideController;
     }
 
@@ -49,7 +52,6 @@ public void Equip(AnimationClip[] animationClips)
         //애니메이션 컨트롤러는 해당장비에 맞게 애니메이션 클립값들을 얻는다.  
         spriteRenderer.color = Color.white;
 
-        Debug.Log("asd");
         animatorOverrideController["Wizard_Attack_Back"] = animationClips[0];
         animatorOverrideController["Wizard_Attack_Front"] = animationClips[1];
         animatorOverrideController["Wizard_Attack_Left"] = animationClips[2];
