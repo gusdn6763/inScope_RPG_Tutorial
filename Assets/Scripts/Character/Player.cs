@@ -22,6 +22,8 @@ public class Player : Character
 
     public int MyGold { get; set; }
 
+    public IInteractable MyInteractable { get { return interactable; } set { interactable = value; } }
+
     protected override void Awake()
     {
         if (instance == null)
@@ -39,7 +41,7 @@ public class Player : Character
     {
         base.Start();
         mana.Initialize(initMana, initMana);
-        MyGold = 10;
+        MyGold = 100;
     }
 
     protected override void Update()

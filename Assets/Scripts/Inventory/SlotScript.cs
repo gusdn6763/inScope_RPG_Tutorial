@@ -90,7 +90,6 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
                     //집은 아이템이 장비일시
                     else if (HandScript.instance.Dragable is Armor)
                     {
-                        Debug.Log(MyItem);
                         if (MyItem is Armor && (MyItem as Armor).ArmorType == (HandScript.instance.Dragable as Armor).ArmorType)
                         {
                             (MyItem as Armor).Equip();
@@ -126,8 +125,8 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
                 else if (HandScript.instance.Dragable is Armor)
                 {
                     Armor armor = (Armor)HandScript.instance.Dragable;
-                    AddItem(armor);
                     CharacterPanel.instance.MyCharButton.DequipArmor();
+                    AddItem(armor);
                     HandScript.instance.Drop();
                 }
             }

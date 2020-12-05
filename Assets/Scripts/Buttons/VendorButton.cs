@@ -30,6 +30,10 @@ public class VendorButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             {
                 quantity.text = vendorItem.MyQuantity.ToString();
             }
+            else
+            {
+                quantity.text = string.Empty;
+            }
             if (vendorItem.MyItem.MyPrice > 0)
             {
                 price.text = "Price: " + vendorItem.MyItem.MyPrice.ToString();
@@ -44,7 +48,7 @@ public class VendorButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (Player.instance.MyGold >= vendorItem.MyItem.MyPrice && InventoryScript.instance.AddItem(vendorItem.MyItem))
+        if ((Player.instance.MyGold >= vendorItem.MyItem.MyPrice) && InventoryScript.instance.AddItem(Instantiate(vendorItem.MyItem)))
         {
             SellItem();
         }

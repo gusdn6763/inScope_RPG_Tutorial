@@ -245,6 +245,26 @@ public class InventoryScript : MonoBehaviour
         }
         return useables;
     }
+
+    public int GetItemCount(string type)
+    {
+        int itemCount = 0;
+
+        //가방 검색  
+        foreach (Bag bag in bags)
+        {
+            //가방의 슬롯 검색  
+            foreach (SlotScript slot in bag.MyBagScript.Slots)
+            {
+                //비어있지 않고 이름이 같으면  
+                if (!slot.IsEmpty && slot.MyItem.MyTitle == type)
+                {
+                    itemCount += slot.MyItems.Count;
+                }
+            }
+        }
+        return itemCount;
+    }
     public void OnItemCountChanged(Item item)
     {
         // 이벤트에 등록된 델리게이트에 있다면

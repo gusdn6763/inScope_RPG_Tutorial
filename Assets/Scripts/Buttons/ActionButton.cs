@@ -16,6 +16,26 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
     public Image MyIcon { get { return icon; } set { icon = value; } }
     public int MyCount { get { return count; } }
     public Text StackText { get { return stackSize; } }
+    public Stack<IUseable> MyUseables 
+    {
+        get 
+        {
+            return useables;
+        }
+        set
+        {
+            if (value.Count > 0)
+            {
+                MyUseable = value.Peek();
+            }
+            else
+            {
+                MyUseable = null;
+            }
+
+            useables = value;
+        }
+    }
 
     private void Awake()
     {
@@ -33,17 +53,16 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
     {
         if (HandScript.instance.Dragable == null)
         {
-            // 액션퀵슬롯에 등록된 것이 스킬이라면
+            // 액션퀵슬롯에 등록된 것이 사용가능한것이면 --> Iuseable을 상속받았다면
             if (MyUseable != null)
             {
                 MyUseable.Use();
             }
-            // 액션퀵슬롯에 사용가능한 아이템이 등록되었고
-            // 등록된 아이템의 개수가 1개 이상이라면
-            if (useables != null && useables.Count > 0)
+            // 등록된 아이템의 개수가 1개 이상이라면 --> 소비형 아이템일경우
+            else if(MyUseables != null && MyUseables.Count > 0)
             {
                 // useables 배열에서 개체 하나를 삭제하고 사용
-                useables.Peek().Use();
+                MyUseables.Peek().Use();
             }
         }
     }
@@ -56,7 +75,7 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
         if (eventData.button == PointerEventData.InputButton.Left)
         {
             //클릭해서 HandScript의 값이 존재할시
-            if (HandScript.instance.Dragable != null)
+            if (HandScript.instance.Dragable != null && HandScript.instance.Dragable is IUseable)
             {
                 SetUseable(HandScript.instance.Dragable as IUseable);
             }
@@ -69,22 +88,24 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
         if (useable is Item)
         {
             // 해당 아이템과 같은 종류의 아이템을 가진 리스트를 저장하고
-            useables = InventoryScript.instance.GetUseables(useable);
-            // 개수 저장
-            count = useables.Count;
+            MyUseables = InventoryScript.instance.GetUseables(useable);
 
-            //  이동모드 상태 해제
-            InventoryScript.instance.ChoosedSlot.MyIcon.color = Color.white;
-            InventoryScript.instance.ChoosedSlot = null;
+            if (InventoryScript.instance.ChoosedSlot != null)
+            {
+                //  이동모드 상태 해제
+                InventoryScript.instance.ChoosedSlot.MyIcon.color = Color.white;
+                InventoryScript.instance.ChoosedSlot = null;
+            }
         }
         else
         {
-            useables.Clear();
+            MyUseables.Clear();
             this.MyUseable = useable;
         }
 
-        count = useables.Count;
+        count = MyUseables.Count;
         UpdateVisual();
+        UIManager.instance.RefreshTooltip(MyUseable as IDescribable);
     }
 
     public void UpdateVisual()
@@ -106,14 +127,14 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
     {
         // 아이템이 IUseable(인터페이스)을 상속받았으며
         // useables 배열의 아이템개수가 1개 이상이면
-        if (item is IUseable && useables.Count > 0)
+        if (item is IUseable && MyUseables.Count > 0)
         {
             // useables 에 등록된 아이템과 item 이 같은 타입이라면
-            if (useables.Peek().GetType() == item.GetType())
+            if (MyUseables.Peek().GetType() == item.GetType())
             {
-                useables = InventoryScript.instance.GetUseables(item as IUseable);
+                MyUseables = InventoryScript.instance.GetUseables(item as IUseable);
 
-                count = useables.Count;
+                count = MyUseables.Count;
 
                 UIManager.instance.UpdateStackSize(this);
             }
@@ -131,7 +152,7 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
             tmp = (IDescribable)MyUseable;
         }
         // 액션 버튼에 등록된 것이 아이템이라면
-        else if (useables.Count > 0)
+        else if (MyUseables.Count > 0)
         {
             //#13.5 기준 액션퀵슬롯에 아이템이 들어갈시 설명창UI는 표현하지 않는다
          //   UIManager.instance.ShowTooltip(transform.position, tmp);

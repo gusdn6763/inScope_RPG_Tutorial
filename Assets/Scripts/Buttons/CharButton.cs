@@ -11,14 +11,9 @@ public class CharButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
     private Armor equippedArmor;
 
     //현재 장착된 장비 아이템을 표시
-    private Image icon;
+    [SerializeField] private Image icon;
 
     public CharButton MyCharButton { get; set; }
-
-    private void Awake()
-    {
-        icon = GetComponentInChildren<Image>();
-    }
 
     public void OnPointerClick(PointerEventData eventData)
     {
@@ -115,7 +110,7 @@ public class CharButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
         {
             gearSocket.Dequip();
         }
-        equippedArmor = null;
         equippedArmor.MyCharButton = null;
+        equippedArmor = null;
     }
 }

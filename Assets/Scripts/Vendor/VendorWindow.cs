@@ -14,6 +14,8 @@ public class VendorWindow : MonoBehaviour
 
     private int pageIndex = 0;
 
+    private Vendor vendor;
+
     private void Awake()
     {
         canvasGroup = GetComponent<CanvasGroup>();
@@ -78,17 +80,18 @@ public class VendorWindow : MonoBehaviour
         }
     }
 
-    public void Open()
+    public void Open(Vendor vendor)
     {
+        this.vendor = vendor;
         canvasGroup.alpha = 1;
         canvasGroup.blocksRaycasts = true;
     }
 
     public void Close()
     {
-        {
-            canvasGroup.alpha = 0;
-            canvasGroup.blocksRaycasts = false;
-        }
+        vendor.IsOpen = false;
+        canvasGroup.alpha = 0;
+        canvasGroup.blocksRaycasts = false;
+        vendor = null;
     }
 }
