@@ -20,7 +20,7 @@ public class DeathBehaviout : StateMachineBehaviour
         //몹을 클릭시 UIManager의 ShowTargetFrame함수에서 함수들을 받음
         if (timePassed >= 5)
         {
-            animator.GetComponent<NPC>().OnCharacterRemoved();
+            animator.GetComponent<Enemy>().OnCharacterRemoved();
         }
     }
 

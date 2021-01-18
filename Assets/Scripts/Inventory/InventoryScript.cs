@@ -265,6 +265,33 @@ public class InventoryScript : MonoBehaviour
         }
         return itemCount;
     }
+
+    //스택에 찾고자 하는 아이템과 갯수를 저장
+    public Stack<Item> GetItems(string type, int count)
+    {
+        Stack<Item> items = new Stack<Item>();
+
+        foreach (Bag bag in bags)
+        {
+            foreach (SlotScript slot in bag.MyBagScript.Slots)
+            {
+                if (!slot.IsEmpty && slot.MyItem.MyTitle == type)
+                {
+                    foreach (Item item in slot.MyItems)
+                    {
+                        items.Push(item);
+
+                        if (items.Count == count)
+                        {
+                            return items;
+                        }
+                    }
+                }
+            }
+        }
+        return items;
+    }
+
     public void OnItemCountChanged(Item item)
     {
         // 이벤트에 등록된 델리게이트에 있다면

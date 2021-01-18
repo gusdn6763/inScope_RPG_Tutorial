@@ -287,10 +287,14 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
 
     public void Clear()
     {
-        if (MyItems.Count > 0)
+        int intitCount = MyItems.Count;
+
+        if (intitCount > 0)
         {
-            InventoryScript.instance.OnItemCountChanged(MyItems.Pop());
-            MyItems.Clear();
+            for (int i = 0; i < intitCount; i++)
+            {
+                InventoryScript.instance.OnItemCountChanged(MyItems.Pop());
+            }
         }
     }
 

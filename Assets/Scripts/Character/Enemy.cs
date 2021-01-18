@@ -1,8 +1,15 @@
 ﻿using UnityEngine;
 
+public delegate void HealthChanged(float health);
+
+public delegate void CharacterRemoved();
+
 [RequireComponent(typeof(LootTable))]
-public class Enemy : NPC
+public class Enemy : Character, IInteractable
 {
+    public event HealthChanged healthChanged;
+    public event CharacterRemoved characterRemoved;
+
     [SerializeField] private CanvasGroup healthGroup = null;
     [SerializeField] float attackRange = 1f;
     [SerializeField] float extraRange = 0.2f;
@@ -10,6 +17,15 @@ public class Enemy : NPC
 
     private LootTable lootTable;
     private IState currentState;
+    [SerializeField] private Sprite Portrait = null;
+
+    public Sprite MyPortrait
+    {
+        get
+        {
+            return Portrait;
+        }
+    }
 
     public Vector3 StartPosition { get; set; }
     public float AttackRange { get => attackRange; set => attackRange = value; }
@@ -31,12 +47,6 @@ public class Enemy : NPC
         StartPosition = transform.position;
         ChangeState(new IdleState());
     }
-    public override Transform Select()
-    {
-        healthGroup.alpha = 1;
-
-        return base.Select();
-    }
 
     protected override void Update()
     {
@@ -52,11 +62,18 @@ public class Enemy : NPC
         base.Update();
     }
 
-    public override void DeSelect()
+    public Transform Select()
+    {
+        healthGroup.alpha = 1;
+
+        return hitBox;
+    }
+
+    public void DeSelect()
     {
         healthGroup.alpha = 0;
-
-        base.DeSelect();
+        healthChanged -= new HealthChanged(UIManager.instance.UpdateTargetFrame);
+        characterRemoved -= new CharacterRemoved(UIManager.instance.HideTargetFrame);
     }
 
     public override void TakeDamage(float damage, Transform source)
@@ -99,15 +116,34 @@ public class Enemy : NPC
         OnHealthChanged(health.MyCurrentValue);
     }
 
-    public override void Interact()
+    public void Interact()
     {
         if (!IsAlive)
         {
             lootTable.ShowLoot();
         }
     }
-    public override void StopInteract()
+    public void StopInteract()
     {
         LootWindow.instance.Close();
     }
+
+    public void OnHealthChanged(float health)
+    {
+        if (healthChanged != null)
+        {
+            //   UIManager.instance.UpdateTargetFrame(health);
+            healthChanged(health);
+        }
+    }
+
+    public void OnCharacterRemoved()
+    {
+        if (characterRemoved != null)
+        {
+            characterRemoved();
+        }
+        Destroy(this.gameObject);
+    }
+
 }

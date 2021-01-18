@@ -9,7 +9,7 @@ public class HealthPotion : Item, IUseable
     public void Use()
     {
         Remove();
-        Player.instance.Health.MyCurrentValue += health;
+        Player.instance.GetHealth(health);
     }
 
     public override string GetDescription()

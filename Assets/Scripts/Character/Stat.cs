@@ -6,13 +6,27 @@ using UnityEngine.UI;
 
 public class Stat : MonoBehaviour
 {
-    private Image content;
     [SerializeField] private Text statValue = null ;
-
     [SerializeField] private float lerpSpeed = 1f;
-    private float currentFill;
-    public float MyMaxValue;
 
+    private Image content;
+
+    private float currentFill;
+    private float currentValue;
+    private float overflow;
+
+    public float MyMaxValue { get; set; }
+    public bool IsFull {  get { return content.fillAmount == 1; } }
+
+    public float MyOverflow
+    {
+        get
+        {
+            float tmp = overflow;
+            overflow = 0;
+            return tmp;
+        }
+    }
 
     public float MyCurrentValue
     {
@@ -23,11 +37,14 @@ public class Stat : MonoBehaviour
 
         set
         {
-            if (value > MyMaxValue) 
+            if (value > MyMaxValue)
+            {
+                overflow = value - MyMaxValue;
                 currentValue = MyMaxValue;
-            else if (value < 0) 
+            }
+            else if (value < 0)
                 currentValue = 0;
-            else 
+            else
                 currentValue = value;
 
             currentFill = currentValue / MyMaxValue;
@@ -39,20 +56,14 @@ public class Stat : MonoBehaviour
         }
     }
 
-    private float currentValue;
-
     void Start()
     {
         content = GetComponent<Image>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (currentFill != content.fillAmount)
-        {
-            content.fillAmount = Mathf.Lerp(content.fillAmount, currentFill, Time.deltaTime * lerpSpeed);
-        }
+        HandleBar();
     }
 
     public void Initialize(float currentValue, float maxValue)
@@ -64,5 +75,18 @@ public class Stat : MonoBehaviour
         MyMaxValue = maxValue;
         MyCurrentValue = currentValue;
         content.fillAmount = MyCurrentValue / maxValue;
+    }
+
+    private void HandleBar()
+    {
+        if (currentFill != content.fillAmount)
+        {
+            content.fillAmount = Mathf.MoveTowards(content.fillAmount, currentFill, Time.deltaTime * lerpSpeed);
+        }
+    }
+
+    public void Reset()
+    {
+        content.fillAmount = 0;
     }
 }

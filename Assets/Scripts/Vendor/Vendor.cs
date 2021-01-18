@@ -2,29 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Vendor : MonoBehaviour, IInteractable
+public class Vendor : NPC, IInteractable
 {
     [SerializeField] private VendorItem[] items;
-    [SerializeField] private VendorWindow vendorWindow;
 
-    public bool IsOpen { get; set; }
-    public void Interact()
-    {
-        if (!IsOpen)
-        {
-            IsOpen = true;
-            vendorWindow.CreatePages(items);
-            vendorWindow.Open(this);
-        }
-    }
-
-    public void StopInteract()
-    {
-        if (IsOpen)
-        {
-            IsOpen = false;
-            vendorWindow.Close();
-        }
-    }
-
+    public VendorItem[] MyItems { get => items; }
 }

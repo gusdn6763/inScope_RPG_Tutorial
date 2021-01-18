@@ -17,6 +17,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image portraitFrame = null;
     [SerializeField] private CanvasGroup keybindMenu = null;
     [SerializeField] private CanvasGroup spellBook = null;
+    [SerializeField] private Text levelText;
+
     private Stat heathStat;
     private Text tooltipText;
 
@@ -55,13 +57,43 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void ShowTargetFrame(NPC target)
+    public void ShowTargetFrame(Enemy target)
     {
         targetFrame.SetActive(true);
         heathStat.Initialize(target.Health.MyCurrentValue, target.Health.MyMaxValue);
         portraitFrame.sprite = target.MyPortrait;
+        levelText.text = target.MyLevel.ToString();
+
+        //적의 체력이 변경시에 실행하는 함수
         target.healthChanged += new HealthChanged(UpdateTargetFrame);
+        //적이 죽거나 다른 몹으로 타겟팅시 실행하는 함수
         target.characterRemoved += new CharacterRemoved(HideTargetFrame);
+
+        //적 레벨이 5이상 높을경우
+        if (target.MyLevel >= Player.instance.MyLevel + 5)
+        {
+            levelText.color = Color.red;
+        }
+        //적 레벨이 3, 4이상 높을경우
+        else if (target.MyLevel == Player.instance.MyLevel + 3 || target.MyLevel == Player.instance.MyLevel + 4)
+        {
+            levelText.color = new Color32(255, 124, 0, 255);
+        }
+        // 적 레벨과 플레이어레벨이 -2 ~ + 2 인경우
+        else if (target.MyLevel >= Player.instance.MyLevel - 2 && target.MyLevel <= Player.instance.MyLevel + 2)
+        {
+            levelText.color = Color.yellow;
+        }
+        // 적 레벨이 플레이어보다 3이상 낮은경우 또는 플레이어 레벨이 몬스터 레벨보다 너무 낮지 않은 경우
+        else if (target.MyLevel <= Player.instance.MyLevel - 3 && target.MyLevel > XPManager.CalculateGrayLevel())
+        {
+            levelText.color = Color.green;
+        }
+        //더 낮은경우
+        else
+        {
+            levelText.color = Color.grey;
+        }
     }
     public void HideTargetFrame()
     {

@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class VendorWindow : MonoBehaviour
+public class VendorWindow : Window
 {
     [SerializeField] private VendorButton[] vendorButtons;
     [SerializeField] private Text pageNumber;
 
     //페이지의 아이템의 리스트들을 전부 저장하는 변수 -> 모든 페이지의 정보를 가지고 있다.  
     private List<List<VendorItem>> pages = new List<List<VendorItem>>();
-    private CanvasGroup canvasGroup;
 
     private int pageIndex = 0;
 
@@ -80,18 +79,9 @@ public class VendorWindow : MonoBehaviour
         }
     }
 
-    public void Open(Vendor vendor)
+    public override void Open(NPC npc)
     {
-        this.vendor = vendor;
-        canvasGroup.alpha = 1;
-        canvasGroup.blocksRaycasts = true;
-    }
-
-    public void Close()
-    {
-        vendor.IsOpen = false;
-        canvasGroup.alpha = 0;
-        canvasGroup.blocksRaycasts = false;
-        vendor = null;
+        CreatePages((npc as Vendor).MyItems);
+        base.Open(npc);
     }
 }

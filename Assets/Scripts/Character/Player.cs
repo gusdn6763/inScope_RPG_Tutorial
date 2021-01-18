@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : Character
 {
     public static Player instance;
 
     [SerializeField] private GearSocket[] gearSockets;
-    [SerializeField] private Stat mana = null;
     [SerializeField] private Block[] blocks = null;
     [SerializeField] protected Transform[] exitPoint = null;
+    [SerializeField] Animator levelUpEffect = null;
+    [SerializeField] private Stat mana = null;
+    [SerializeField] private Stat xpStat;
+    [SerializeField] private Text levelText;
 
     //NPC, 몹등과 상호작용하기 위함  
     private IInteractable interactable;
@@ -21,7 +25,7 @@ public class Player : Character
     private int exitIndex;
 
     public int MyGold { get; set; }
-
+    public Stat MyXp { get { return xpStat; } set { xpStat = value; } }
     public IInteractable MyInteractable { get { return interactable; } set { interactable = value; } }
 
     protected override void Awake()
@@ -41,6 +45,8 @@ public class Player : Character
     {
         base.Start();
         mana.Initialize(initMana, initMana);
+        xpStat.Initialize(0, Mathf.Floor(100 * MyLevel * Mathf.Pow(MyLevel, 0.5f)));
+        levelText.text = MyLevel.ToString();
         MyGold = 100;
     }
 
@@ -82,6 +88,10 @@ public class Player : Character
         {
             health.MyCurrentValue += 10;
             mana.MyCurrentValue += 10;
+        }
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            GainXP(600);
         }
 
 
@@ -222,6 +232,43 @@ public class Player : Character
         if (interactable != null)
         {
             interactable.Interact();
+        }
+    }
+
+    //경험치 획득
+    public void GainXP(int xp)
+    {
+        //현재 내 경험치에서 얻을 경험치를 더함
+        MyXp.MyCurrentValue += xp;
+        CombatTextManager.instance.CreateText(transform.position, xp.ToString(), SCTTYPE.XP, false);
+
+        //레벨업시
+        if (MyXp.MyCurrentValue >= MyXp.MyMaxValue)
+        {
+            StartCoroutine(LevelUp());
+        }
+    }
+
+    private IEnumerator LevelUp()
+    {
+        //이 조건문이 없을경우 한번에 여러번 레벨업시 레벨업바가 증가하는 과정을 건너뛰게된다.
+        while (!MyXp.IsFull)
+        {
+            yield return null;
+        }
+
+        MyLevel++;
+        levelUpEffect.SetTrigger("Ding");
+        levelText.text = MyLevel.ToString();
+        MyXp.MyMaxValue = 100 * MyLevel * Mathf.Pow(MyLevel, 0.5f);
+        MyXp.MyMaxValue = Mathf.Floor(MyXp.MyMaxValue);
+        MyXp.MyCurrentValue = MyXp.MyOverflow;
+        MyXp.Reset();
+
+        //한번에 2업이상 레벨업을 할 경우를 대비하기위해 조건문이 맞을시 함수 재실행
+        if (MyXp.MyCurrentValue >= MyXp.MyMaxValue)
+        {
+            StartCoroutine(LevelUp());
         }
     }
 
