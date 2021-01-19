@@ -22,6 +22,8 @@ public class Questlog : MonoBehaviour
     private Quest selectedQuest;
     private int currentCount = 0;
 
+    public List<Quest> MyQuests { get => quests; set => quests = value; }
+
     private void Awake()
     {
         if (instance == null)
@@ -31,13 +33,6 @@ public class Questlog : MonoBehaviour
         else if (instance != null)
         {
             Destroy(this.gameObject);
-        }
-    }
-    public void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            OpenClose();
         }
     }
 
@@ -63,7 +58,7 @@ public class Questlog : MonoBehaviour
                 GameManager.instance.killConfirmedEvent += new KillConfirmed(o.UpdateKillCount);
             }
 
-            quests.Add(quest);
+            MyQuests.Add(quest);
 
             GameObject go = Instantiate(questPrefab, questParent);
             QuestScript qs = go.GetComponent<QuestScript>();
@@ -106,7 +101,7 @@ public class Questlog : MonoBehaviour
                 objectives += obj.MyType + ": " + obj.MyCurrentAmount + "/" + obj.MyAmount + "\n";
             }
 
-            questDescription.text = string.Format("<b>{0}\n\n</b><size=10>{1}\n\n</size><size=8>{2}</size>", quest.MyTitle, quest.MyDescripiton, objectives);
+            questDescription.text = string.Format("<b>{0}\n\n</b><size=10>{1}\n\n</size><size=8>{2}</size>", quest.MyTitle, quest.MyDescription, objectives);
         }
     }
     //퀘스트들이 완료됬는지 하나씩 확인한다.  
@@ -119,24 +114,6 @@ public class Questlog : MonoBehaviour
         }
     }
 
-    public void OpenClose()
-    {
-        if (canvasGroup.alpha == 1)
-        {
-            Close();
-        }
-        else
-        {
-            canvasGroup.alpha = 1;
-            canvasGroup.blocksRaycasts = true;
-        }
-    }
-
-    public void Close()
-    {
-        canvasGroup.alpha = 0;
-        canvasGroup.blocksRaycasts = false;
-    }
 
     //퀘스트 포기
     public void AbandonQuest()
@@ -160,7 +137,7 @@ public class Questlog : MonoBehaviour
         //수락한 퀘스트들 삭제
         questScripts.Remove(qs);
         Destroy(qs.gameObject);
-        quests.Remove(qs.MyQuest);
+        MyQuests.Remove(qs.MyQuest);
 
         questDescription.text = string.Empty;
         selectedQuest = null;
@@ -172,6 +149,6 @@ public class Questlog : MonoBehaviour
 
     public bool HasQuest(Quest quest)
     {
-        return quests.Exists(x => x.MyTitle == quest.MyTitle);
+        return MyQuests.Exists(x => x.MyTitle == quest.MyTitle);
     }
 }

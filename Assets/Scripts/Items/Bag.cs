@@ -13,9 +13,9 @@ public class Bag : Item, IUseable
     public BagScript MyBagScript { get; set; }
 
     public BagButton MyBagButton { get; set; }
-    public int Slots { get { return slots; } }
+    public int MySlotCount { get { return slots; } }
 
-    public void Initalize(int slots)
+    public void Initialize(int slots)
     {
         // Bag의 슬롯갯수 설정
         this.slots = slots;
@@ -41,8 +41,17 @@ public class Bag : Item, IUseable
                 // 인벤토리에 가방을 추가한다. (가방 교체)
                 InventoryScript.instance.AddBag(this, MyBagButton);
             }
+            MyBagScript.MyBagIndex = MyBagButton.BagIndex;
         }
     }
+
+    //가방창UI 생성
+    public void SetupScript()
+    {
+        MyBagScript = Instantiate(bagPrefab, InventoryScript.instance.transform).GetComponent<BagScript>();
+        MyBagScript.AddSlots(slots);
+    }
+
     public override string GetDescription()
     {
         return base.GetDescription() + string.Format("\n{0}칸짜리 슬롯 가방", slots);

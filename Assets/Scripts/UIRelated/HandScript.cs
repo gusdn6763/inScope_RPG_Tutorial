@@ -70,7 +70,6 @@ public class HandScript : MonoBehaviour
 
     public void DeleteItem()
     {
-
         // Dragable인터페이스를 포함한 아이템이고, 선택가능한 슬롯이면
         if (Dragable is Item && InventoryScript.instance.ChoosedSlot != null)
         {

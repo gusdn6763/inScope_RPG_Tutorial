@@ -7,13 +7,15 @@ public delegate void KillConfirmed(Character character);
 
 public class GameManager : MonoBehaviour
 {
-    public event KillConfirmed killConfirmedEvent;
-
     public static GameManager instance;
+
+    public event KillConfirmed killConfirmedEvent;
 
     [SerializeField] private Player player = null;
 
     private Enemy currentTarget;
+    private Camera mainCamera;
+
 
     private void Awake()
     {
@@ -25,6 +27,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+        mainCamera = Camera.main;
     }
 
     void Update()
@@ -34,9 +37,9 @@ public class GameManager : MonoBehaviour
 
     private void ClickTarget()
     {
-        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())//If we click the left mouse button
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
-            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, Mathf.Infinity, 512);
+            RaycastHit2D hit = Physics2D.Raycast(mainCamera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, Mathf.Infinity, 512);
 
             if (hit.collider != null && hit.collider.CompareTag("Enemy"))
             {
@@ -63,7 +66,7 @@ public class GameManager : MonoBehaviour
         else if (Input.GetMouseButtonDown(1) && !EventSystem.current.IsPointerOverGameObject())
         {
             
-            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, Mathf.Infinity, 512);
+            RaycastHit2D hit = Physics2D.Raycast(mainCamera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, Mathf.Infinity, 512);
 
 
             Debug.Log(hit.collider);

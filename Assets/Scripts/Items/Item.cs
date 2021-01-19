@@ -2,7 +2,7 @@
 
 public abstract class Item : ScriptableObject, IMoveable, IDescribable
 {
-    private SlotScript slot;
+    private SlotScript slot;                //아이템을 슬롯에 저장, 갯수, 번호, 아이콘 등등을 저장함
     private CharButton charButton;
 
     [SerializeField] private Sprite icon = null;

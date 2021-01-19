@@ -28,6 +28,8 @@ public class Player : Character
     public Stat MyXp { get { return xpStat; } set { xpStat = value; } }
     public IInteractable MyInteractable { get { return interactable; } set { interactable = value; } }
 
+    public Stat Mana { get => mana; set => mana = value; }
+
     protected override void Awake()
     {
         if (instance == null)
@@ -41,10 +43,10 @@ public class Player : Character
         base.Awake();
     }
 
-    protected override void Start()
+    protected void Start()
     {
-        base.Start();
-        mana.Initialize(initMana, initMana);
+        health.Initialize(initHealth, initHealth);
+        Mana.Initialize(initMana, initMana);
         xpStat.Initialize(0, Mathf.Floor(100 * MyLevel * Mathf.Pow(MyLevel, 0.5f)));
         levelText.text = MyLevel.ToString();
         MyGold = 100;
@@ -59,6 +61,15 @@ public class Player : Character
 
         transform.position = new Vector3(xMinClamp, yMinClamp, transform.position.z);
         base.Update();
+    }
+
+    public void SetDefaultValues()
+    {
+        MyGold = 1000;
+        health.Initialize(initHealth, initHealth);
+        Mana.Initialize(initMana, initMana);
+        MyXp.Initialize(0, Mathf.Floor(100 * MyLevel * Mathf.Pow(MyLevel, 0.5f)));
+        levelText.text = MyLevel.ToString();
     }
 
     public override void HandleLayers()
@@ -79,17 +90,17 @@ public class Player : Character
         Direction = Vector2.zero;
 
         ///THIS IS USED FOR DEBUGGING ONLY
-        if (Input.GetKeyDown(KeyCode.I))
+        if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             health.MyCurrentValue -= 10;
-            mana.MyCurrentValue -= 10;
+            Mana.MyCurrentValue -= 10;
         }
-        if (Input.GetKeyDown(KeyCode.O))
+        if (Input.GetKeyDown(KeyCode.Alpha5))
         {
             health.MyCurrentValue += 10;
-            mana.MyCurrentValue += 10;
+            Mana.MyCurrentValue += 10;
         }
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.Alpha6))
         {
             GainXP(600);
         }
@@ -270,6 +281,11 @@ public class Player : Character
         {
             StartCoroutine(LevelUp());
         }
+    }
+
+    public void UpdateLevel()
+    {
+        levelText.text = MyLevel.ToString();
     }
 
     public void OnTriggerEnter2D(Collider2D collision)

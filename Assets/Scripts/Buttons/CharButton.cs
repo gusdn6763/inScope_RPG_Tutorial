@@ -2,8 +2,13 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+//캐릭터 장비창
+/// <summary>
+/// 
+/// </summary>
 public class CharButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    ///
     [SerializeField] private GearSocket gearSocket;
     [SerializeField] private ArmorType armorType;
 
@@ -14,6 +19,7 @@ public class CharButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
     [SerializeField] private Image icon;
 
     public CharButton MyCharButton { get; set; }
+    public Armor MyEquippedArmor { get => equippedArmor; }
 
     public void OnPointerClick(PointerEventData eventData)
     {
@@ -33,32 +39,31 @@ public class CharButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
                 UIManager.instance.RefreshTooltip(tmp);
             }
             //드래그 한것이 없는 상태에서 장비창을 클릭하고, 무언가를 장비중일시 => 장비해제
-            else if(HandScript.instance.Dragable == null && equippedArmor != null)
+            else if(HandScript.instance.Dragable == null && MyEquippedArmor != null)
             {
                 //아이템의 정보를 드래그에 넘겨줌
-                HandScript.instance.TakeMoveable(equippedArmor);
+                HandScript.instance.TakeMoveable(MyEquippedArmor);
                 CharacterPanel.instance.MyCharButton = this;
                 icon.color = Color.grey;
             }
         }
     }
 
-    // 장착
     public void EquipArmor(Armor armor)
     {
         //원래 입던 장비 해제
         armor.Remove();
 
         //장비를 착용중이라면
-        if (equippedArmor != null)
+        if (MyEquippedArmor != null)
         {
-            if (equippedArmor != armor)
+            if (MyEquippedArmor != armor)
             {
                 //원래입던 장비를 가방에 추가함
-                armor.MySlot.AddItem(equippedArmor);
+                armor.MySlot.AddItem(MyEquippedArmor);
             }
             //원래 입었던 장비의 설명창UI를 보여줌
-            UIManager.instance.RefreshTooltip(equippedArmor);
+            UIManager.instance.RefreshTooltip(MyEquippedArmor);
         }
         else
         {
@@ -69,7 +74,7 @@ public class CharButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
         icon.sprite = armor.MyIcon;
         this.equippedArmor = armor;
         icon.color = Color.white;
-        this.equippedArmor.MyCharButton = this;
+        this.MyEquippedArmor.MyCharButton = this;
 
         if (HandScript.instance.Dragable == (armor as IMoveable))
         {
@@ -77,24 +82,24 @@ public class CharButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
         }
 
         //gearSocket이 널값이 아닌지 체크하는 이유 : 보조장비, 장갑같은경우 장비를 해도 플레이어가 장비한 장비를 보여주지 않음  
-        if (gearSocket != null && equippedArmor.MyAnimationClips != null)
+        if (gearSocket != null && MyEquippedArmor.MyAnimationClips != null)
         {
-            gearSocket.Equip(equippedArmor.MyAnimationClips);
+            gearSocket.Equip(MyEquippedArmor.MyAnimationClips);
         }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (equippedArmor != null)
+        if (MyEquippedArmor != null)
         {
             //플레이어가 착용한 장비의 정보를 보여줌
-            UIManager.instance.ShowTooltip(new Vector2(0, 0), transform.position, equippedArmor);
+            UIManager.instance.ShowTooltip(new Vector2(0, 0), transform.position, MyEquippedArmor);
         }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (equippedArmor != null)
+        if (MyEquippedArmor != null)
         {
             //플레이어가 착용한 장비의 정보를 보여줌
             UIManager.instance.HideTooltip();
@@ -106,7 +111,7 @@ public class CharButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
         icon.color = Color.white;
         icon.enabled = false;
 
-        if (gearSocket != null && equippedArmor.MyAnimationClips != null)
+        if (gearSocket != null && MyEquippedArmor.MyAnimationClips != null)
         {
             gearSocket.Dequip();
         }

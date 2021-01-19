@@ -3,6 +3,9 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
+/// <summary>
+/// 플레이어 액션바 관련 클래스, OnPointerClick함수 먼저 보는것을 추천
+/// </summary>
 public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Text stackSize;
@@ -15,13 +18,9 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
     public Button MyButton { get; private set; }
     public Image MyIcon { get { return icon; } set { icon = value; } }
     public int MyCount { get { return count; } }
-    public Text StackText { get { return stackSize; } }
-    public Stack<IUseable> MyUseables 
-    {
-        get 
-        {
-            return useables;
-        }
+    public Text MyStackText { get { return stackSize; } }
+    public Stack<IUseable> MyUseables  
+    { get  { return useables; }
         set
         {
             if (value.Count > 0)
@@ -82,6 +81,10 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
         }
     }
 
+    /// <summary>
+    /// 액션바에 놓을시Dragable에 있는 값을 이용해 액션바에 값을 저장   
+    /// </summary>
+    /// <param name="useable">IUseable인터페이스를 포함하는 아이템, 스펠을 받음</param>
     public void SetUseable(IUseable useable)
     {
         // 액션 퀵슬롯에 등록되려는 것이 아이템이라면
@@ -90,6 +93,7 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
             // 해당 아이템과 같은 종류의 아이템을 가진 리스트를 저장하고
             MyUseables = InventoryScript.instance.GetUseables(useable);
 
+            //불러오기시에 ChoosedSlot값이 null이기 대문에 조건설정
             if (InventoryScript.instance.ChoosedSlot != null)
             {
                 //  이동모드 상태 해제
@@ -104,14 +108,23 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
         }
 
         count = MyUseables.Count;
-        UpdateVisual();
+        UpdateVisual(useable as IMoveable);
         UIManager.instance.RefreshTooltip(MyUseable as IDescribable);
     }
 
-    public void UpdateVisual()
+    /// <summary>
+    /// 드래그한 오브젝트를 액션바에 놓을시 드래그 이미지를 지움 
+    /// </summary>
+    /// <param name="moveable">액션바의 이미지를 바꿈</param>
+    public void UpdateVisual(IMoveable moveable)
     {
+        //액션바에 스킬을 놓을시 드래그 오브젝트의 값을 비움
+        if (HandScript.instance.Dragable != null)
+        {
+            HandScript.instance.Drop();
+        }
 
-        MyIcon.sprite = HandScript.instance.Put().MyIcon;
+        MyIcon.sprite = moveable.MyIcon;
         MyIcon.color = Color.white;
 
         if (count > 1)
@@ -123,6 +136,11 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
             UIManager.instance.ClearStackCount(this);
         }
     }
+
+    /// <summary>
+    /// 인벤토리에서 아이템이 증가시 액션바에서도 아이템을 증가시킴, OnItemCountChanged이벤트 함수를 이용
+    /// </summary>
+    /// <param name="item">액션바에서 받은 아이템갯수를 증가시킴</param>
     public void UpdateItemCount(Item item)
     {
         // 아이템이 IUseable(인터페이스)을 상속받았으며

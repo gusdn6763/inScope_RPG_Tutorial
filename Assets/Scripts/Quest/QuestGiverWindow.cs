@@ -115,7 +115,7 @@ public class QuestGiverWindow : Window
             objectives += obj.MyType + ": " + obj.MyCurrentAmount + "/" + obj.MyAmount + "\n";
         }
 
-        questDescription.GetComponent<Text>().text = string.Format("<b>{0}\n\n</b><size=11>{1}\n\n</size><size=8>{2}</size>", quest.MyTitle, quest.MyDescripiton, objectives);
+        questDescription.GetComponent<Text>().text = string.Format("<b>{0}\n\n</b><size=11>{1}\n\n</size><size=8>{2}</size>", quest.MyTitle, quest.MyDescription, objectives);
     }
 
     public void Back()
@@ -147,7 +147,9 @@ public class QuestGiverWindow : Window
             {
                 if (selectedQuest == questGiver.MyQuests[i])
                 {
+                    questGiver.MyCompltedQuests.Add(selectedQuest.MyTitle);
                     questGiver.MyQuests[i] = null;
+                    selectedQuest.MyQuestGiver.UpdateQuestStatus();
                 }
             }
             foreach (CollectObjective o in selectedQuest.MyCollectObjectives)

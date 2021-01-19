@@ -66,6 +66,15 @@ public class InventoryScript : MonoBehaviour
             }
         }
     }
+    public List<Bag> MyBags
+    {
+        get
+        {
+            return bags;
+        }
+    }
+
+
 
     private void Awake()
     {
@@ -84,16 +93,16 @@ public class InventoryScript : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             Bag bag = (Bag)Instantiate(items[9]);
-            bag.Initalize(8);
+            bag.Initialize(16);
             bag.Use();
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             Bag bag = (Bag)Instantiate(items[9]);
-            bag.Initalize(16);
+            bag.Initialize(8);
             AddItem(bag);
         }
-        if (Input.GetKeyDown(KeyCode.H))
+        if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             AddItem((HealthPotion)Instantiate(items[0]));
             AddItem((Armor)Instantiate(items[1]));
@@ -121,9 +130,28 @@ public class InventoryScript : MonoBehaviour
             }
         }
     }
+    
+    //가방 교체를 위한 오버로딩 함수
+    public void AddBag(Bag bag, BagButton bagButton)
+    {
+        bags.Add(bag);
+        bagButton.MyBag = bag;
+        bag.MyBagScript.transform.SetSiblingIndex(bagButton.BagIndex);
+    }
+
+    //불러오기를 통해 가방이 몇번째에 있었는지 파악하기위한 함수
+    public void AddBag(Bag bag, int bagIndex)
+    {
+        bag.SetupScript();
+        bags.Add(bag);
+        bag.MyBagScript.MyBagIndex = bagIndex;
+        bag.MyBagButton = bagButtons[bagIndex];
+        bagButtons[bagIndex].MyBag = bag;
+    }
 
     public void RemoveBag(Bag bag)
     {
+        bag.SetupScript();
         bags.Remove(bag);
         Destroy(bag.MyBagScript.gameObject);
     }
@@ -131,7 +159,7 @@ public class InventoryScript : MonoBehaviour
     public void SwapBags(Bag oldBag, Bag newBag)
     {
         //변경될 모든 슬롯의 갯수 = (현재 모든 슬롯의 갯수 - 기존 가방의 슬롯갯수) + 바꿀려는 가방의 슬롯갯수
-        int newSlotCount = (MyTotalSlotCount - oldBag.Slots) + newBag.Slots;
+        int newSlotCount = (MyTotalSlotCount - oldBag.MySlotCount) + newBag.MySlotCount;
 
         //만약 원래 16칸 짜리 가방을 8칸짜리 가방으로 바꿀때, 아이템이 9칸이상 차지하고 있을시 가방 교체가 불가능하다.  
         if (newSlotCount - MyFullSlotCount >= 0)
@@ -159,13 +187,6 @@ public class InventoryScript : MonoBehaviour
             instance.ChoosedSlot = null;
         }
     }    
-
-    public void AddBag(Bag bag, BagButton bagButton)
-    {
-        bags.Add(bag);
-        bagButton.MyBag = bag;
-        bag.MyBagScript.transform.SetSiblingIndex(bagButton.BagIndex);
-    }
 
     public void OpenClose()
     {
@@ -221,6 +242,7 @@ public class InventoryScript : MonoBehaviour
         return false;
     }
 
+    //액션바에 저장
     public Stack<IUseable> GetUseables(IUseable type)
     {
         Stack<IUseable> useables = new Stack<IUseable>();
@@ -244,6 +266,27 @@ public class InventoryScript : MonoBehaviour
             }
         }
         return useables;
+    }
+
+    public IUseable GetUseables(string type)
+    {
+        Stack<IUseable> useables = new Stack<IUseable>();
+
+        // 가방퀵슬롯에 등록된 모든 가방을 검사.
+        foreach (Bag bag in bags)
+        {
+            // 가방의 모든 슬롯을 검사
+            foreach (SlotScript slot in bag.MyBagScript.Slots)
+            {
+                // 빈슬롯이 아니고
+                // 슬롯에 저장된 아이템이 불러온 아이템(type)이름과 같으면
+                if (!slot.IsEmpty && slot.MyItem.MyTitle == type)
+                {
+                    return (slot.MyItem as IUseable);
+                }
+            }
+        }
+        return null;
     }
 
     public int GetItemCount(string type)
@@ -290,6 +333,30 @@ public class InventoryScript : MonoBehaviour
             }
         }
         return items;
+    }
+
+    //인벤토리의 아이템을 전부 불러온다 -> 저장하거나 불러올때 유용하다. 
+    public List<SlotScript> GetAllItems()
+    {
+        List<SlotScript> slots = new List<SlotScript>();
+
+        foreach (Bag bag in MyBags)
+        {
+            foreach (SlotScript slot in bag.MyBagScript.Slots)
+            {
+                if (!slot.IsEmpty)
+                {
+                    slots.Add(slot);
+                }
+            }
+        }
+        return slots;
+    }
+
+    //몇번째 가방의 몇번째 슬롯에 아이템을 추가한다.
+    public void PlaceInSpecific(Item item, int slotIndex, int bagIndex)
+    {
+        bags[bagIndex].MyBagScript.Slots[slotIndex].AddItem(item);
     }
 
     public void OnItemCountChanged(Item item)

@@ -7,8 +7,8 @@ public abstract class Character : MonoBehaviour
 {
     [SerializeField] protected Stat health = null;
     [SerializeField] protected Transform hitBox = null;
+    [SerializeField] protected float initHealth = 0f;
     [SerializeField] private float speed = 1f;
-    [SerializeField] private float initHealth = 0f;
     [SerializeField] private string type;
     [SerializeField] private int level;
 
@@ -41,11 +41,6 @@ public abstract class Character : MonoBehaviour
     {
         rigi = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
-    }
-
-    protected virtual void Start()
-    {
-        health.Initialize(initHealth, initHealth);
     }
 
     protected virtual void Update()

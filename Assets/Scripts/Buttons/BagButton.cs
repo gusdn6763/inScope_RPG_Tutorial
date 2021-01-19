@@ -8,13 +8,14 @@ public class BagButton : MonoBehaviour, IPointerClickHandler
 {
     private Bag bag;
 
-    [SerializeField] private Sprite full, empty;
-    [SerializeField] private int bagIndex;
+    [SerializeField] private Sprite full, empty;                //가방슬롯이 있는 이미지, 없는 이미지
+    [SerializeField] private int bagIndex;                      //몇번째 가방슬롯인지 저장
 
+    public int BagIndex { get => bagIndex; set => bagIndex = value; }
     public Bag MyBag { get { return bag; }
         set
         {
-            // 백 버튼에 가방이 등록되어있는지 아닌지 체크
+            //가방 슬롯에 가방이 등록되어있는지 아닌지 체크
             if (value != null)
             {
                 GetComponent<Image>().sprite = full;
@@ -27,8 +28,6 @@ public class BagButton : MonoBehaviour, IPointerClickHandler
             bag = value;
         }
     }
-
-    public int BagIndex { get => bagIndex; set => bagIndex = value; }
 
     public void OnPointerClick(PointerEventData eventData)
     {
@@ -58,6 +57,9 @@ public class BagButton : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    /// <summary>
+    /// 가방 삭제
+    /// </summary>
     public void RemoveBag()
     {
         InventoryScript.instance.RemoveBag(MyBag);

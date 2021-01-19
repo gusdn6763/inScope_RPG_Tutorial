@@ -8,10 +8,10 @@ public class BagScript : MonoBehaviour
     private List<SlotScript> slots = new List<SlotScript>();
     private CanvasGroup canvasGroup;
 
+    public List<SlotScript> Slots { get => slots; }
 
     public bool IsOpen { get { return canvasGroup.alpha > 0; } }
-
-    public List<SlotScript> Slots { get => slots; }
+    public int MyBagIndex { get; set; }         //몇번째 가방인지 
 
     private void Awake()
     {
@@ -39,6 +39,7 @@ public class BagScript : MonoBehaviour
         for (int i = 0; i < slotCount; i++)
         {
             SlotScript slot = Instantiate(slotPrefab, transform).GetComponent<SlotScript>();
+            slot.MyIndex = i;       //몇번째 슬롯인지 파악 해줌
             slot.MyBag = this;
             Slots.Add(slot);
         }

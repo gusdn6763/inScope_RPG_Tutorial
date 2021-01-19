@@ -12,5 +12,5 @@ public interface IClickable
 
     int MyCount{ get; }
 
-    Text StackText { get; }
+    Text MyStackText { get; }
 }

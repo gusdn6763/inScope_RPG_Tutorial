@@ -39,7 +39,7 @@ public class Spell : IUseable, IMoveable, IDescribable
         }
     }
 
-    public string Name
+    public string MyName
     {
         get
         {
@@ -78,6 +78,6 @@ public class Spell : IUseable, IMoveable, IDescribable
 
     public void Use()
     {
-        Player.instance.CastSpell(Name);
+        Player.instance.CastSpell(MyName);
     }
 }

@@ -30,12 +30,12 @@ public class SpellBook : MonoBehaviour
     }
     public Spell CastSpell(string spellName)
     {
-        Spell spell = Array.Find(spells, x => x.Name == spellName);
+        Spell spell = Array.Find(spells, x => x.MyName == spellName);
 
         castingBar.fillAmount = 0f;
         castingBar.color = spell.BarColor;
         spellIcon.sprite = spell.MyIcon;
-        currentSpell.text = spell.Name;
+        currentSpell.text = spell.MyName;
         spellCastingTime.text = spell.CastTime.ToString();
         spellCoroutine = StartCoroutine(Progress(spell));
         spellStopCoroutine = StartCoroutine(FadeBar());
@@ -100,7 +100,7 @@ public class SpellBook : MonoBehaviour
 
     public Spell GetSpell(string spellName)
     {
-        Spell spell = Array.Find(spells, x => x.Name == spellName);
+        Spell spell = Array.Find(spells, x => x.MyName == spellName);
         return spell;
     }
 }

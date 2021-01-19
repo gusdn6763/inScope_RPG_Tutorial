@@ -40,9 +40,8 @@ public class Enemy : Character, IInteractable
         lootTable = GetComponent<LootTable>();
     }
 
-    protected override void Start()
+    protected void Start()
     {
-        base.Start();
         AggroRange = initAggroRange;
         StartPosition = transform.position;
         ChangeState(new IdleState());

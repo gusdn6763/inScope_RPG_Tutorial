@@ -19,9 +19,9 @@ public class Quest
 
     public QuestScript MyQuestScript { get; set; }
     public string MyTitle { get => title; set => title = value; }
-    public string MyDescripiton { get => descripiton; set => descripiton = value; }
+    public string MyDescription { get => descripiton; set => descripiton = value; }
     public CollectObjective[] MyCollectObjectives { get => collectObjectives; }
-    public KillObjective[] MyKillObjectives { get => killObjectives; }
+    public KillObjective[] MyKillObjectives { get => killObjectives; set => killObjectives = value; }
 
     [SerializeField] private int level;
     [SerializeField] private int xp;

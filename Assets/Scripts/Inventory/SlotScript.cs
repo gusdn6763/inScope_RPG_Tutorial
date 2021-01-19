@@ -12,7 +12,6 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
     [SerializeField] private Image icon;
     [SerializeField] private Text stackSize;
 
-
     public BagScript MyBag { get; set; }
 
     public Item MyItem
@@ -27,15 +26,13 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
         }
     }
     public ObservableStack<Item> MyItems { get => items; }
-
-
     public Image MyIcon { get { return icon; } set { icon = value; } }
+    public Text MyStackText { get { return stackSize; } }
 
-    public int MyCount { get { return MyItems.Count; } }
-    // 빈 슬롯 여부
-    public bool IsEmpty { get { return MyItems.Count == 0; } }
-    // 해당 슬롯이 가득 찼는지 확인
-    public bool IsFull
+    public int MyIndex { get; set; }                                //몇번째 슬롯에 있는지 저장하기 위함
+    public int MyCount { get { return MyItems.Count; } }            //아이템 갯수
+    public bool IsEmpty { get { return MyItems.Count == 0; } }      //빈 슬롯 여부
+    public bool IsFull                                              //해당 슬롯이 가득 찼는지 확인
     {
         get
         {
@@ -47,8 +44,6 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
             else return true;
         }
     }
-
-    public Text StackText { get { return stackSize; } }
 
     private void Awake()
     {
@@ -114,7 +109,7 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
                     //가방을 추가, 가방 삭제, 아이템을 놓음
                     Bag bag = (Bag)HandScript.instance.Dragable;
 
-                    if (bag.MyBagScript != MyBag && InventoryScript.instance.MyEmptySlotCount - bag.Slots > 0)
+                    if (bag.MyBagScript != MyBag && InventoryScript.instance.MyEmptySlotCount - bag.MySlotCount > 0)
                     {
                         AddItem(bag);
                         bag.MyBagButton.RemoveBag();

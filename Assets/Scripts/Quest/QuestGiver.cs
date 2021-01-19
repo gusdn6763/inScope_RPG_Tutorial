@@ -5,19 +5,43 @@ using UnityEngine;
 public class QuestGiver : NPC
 { 
     [SerializeField] private Quest[] quests;
-
     [SerializeField] private Sprite question, questionSilver, exclamation;
-
     [SerializeField] private SpriteRenderer statusRenderer;
+    [SerializeField] private int questGiverID;          //퀘스트 ID => 
+
+    private List<string> compltedQuests = new List<string>();
 
     public Quest[] MyQuests { get { return quests; } }
+    public int MyQuestGiverID { get => questGiverID; }
+
+    public List<string> MyCompltedQuests
+    { get { return compltedQuests; }
+        set
+        {
+            compltedQuests = value;
+
+            foreach (string title in compltedQuests)
+            {
+                for (int i = 0; i < quests.Length; i++)
+                {
+                    if (quests[i] != null && quests[i].MyTitle == title)
+                    {
+                        quests[i] = null;
+                    }
+                }
+            }
+        }
+    }
 
     private void Start()
     {
         //NPC에 퀘스트가 있을경우 그 퀘스트가 어떠한 NPC에게 있는지 저장하기위함
         foreach (Quest quest in quests)
         {
-            quest.MyQuestGiver = this;
+            if (quest != null)
+            {
+                quest.MyQuestGiver = this;
+            }
         }
     }
 

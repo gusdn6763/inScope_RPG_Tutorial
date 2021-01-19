@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
+    [SerializeField] private CanvasGroup[] menus = null;
     [SerializeField] private GameObject[] keybindButtons = null;
     [SerializeField] private ActionButton[] actionButtons = null;
     [SerializeField] private CharacterPanel characterPanel = null;
@@ -41,20 +42,37 @@ public class UIManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            OpenClose(keybindMenu);
+            OpenClose(menus[0]);
         }
         if (Input.GetKeyDown(KeyCode.K))
         {
-            OpenClose(spellBook);
+            OpenClose(menus[1]);
+        }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            OpenClose(menus[2]);
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            OpenClose(menus[2]);
         }
         if (Input.GetKeyDown(KeyCode.I))
         {
             InventoryScript.instance.OpenClose();
         }
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            characterPanel.OpenClose();
-        }
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //{
+        //    OpenClose(keybindMenu);
+        //}
+        //if (Input.GetKeyDown(KeyCode.K))
+        //{
+        //    OpenClose(spellBook);
+        //}
+
+        //if (Input.GetKeyDown(KeyCode.C))
+        //{
+        //    characterPanel.OpenClose();
+        //}
     }
 
     public void ShowTargetFrame(Enemy target)
@@ -122,29 +140,45 @@ public class UIManager : MonoBehaviour
         canvasGroup.blocksRaycasts = (canvasGroup.blocksRaycasts) == true ? false : true;
     }
 
+    public void OpenSingle(CanvasGroup canvasGroup)
+    {
+        foreach (CanvasGroup canvas in menus)
+        {
+            CloseSingle(canvas);
+        }
+        canvasGroup.alpha = canvasGroup.alpha > 0 ? 0 : 1;
+        canvasGroup.blocksRaycasts = canvasGroup.blocksRaycasts == true ? false : true;
+    }
+
+    public void CloseSingle(CanvasGroup canvasGroup)
+    {
+        canvasGroup.alpha = 0;
+        canvasGroup.blocksRaycasts = false;
+    }
+
     public void UpdateStackSize(IClickable clickable)
     {
         if (clickable.MyCount > 1)
         {
-            clickable.StackText.text = clickable.MyCount.ToString();
-            clickable.StackText.color = Color.white;
+            clickable.MyStackText.text = clickable.MyCount.ToString();
+            clickable.MyStackText.color = Color.white;
             clickable.MyIcon.color = Color.white;
         }
         else
         {
-            clickable.StackText.color = new Color(0, 0, 0, 0);
+            clickable.MyStackText.color = new Color(0, 0, 0, 0);
             clickable.MyIcon.color = Color.white;
         }
         if (clickable.MyCount == 0)
         {
             clickable.MyIcon.color = new Color(0, 0, 0, 0);
-            clickable.StackText.color = new Color(0, 0, 0, 0);
+            clickable.MyStackText.color = new Color(0, 0, 0, 0);
         }
     }
 
     public void ClearStackCount(IClickable clickable)
     {
-        clickable.StackText.color = new Color(0, 0, 0, 0);
+        clickable.MyStackText.color = new Color(0, 0, 0, 0);
         clickable.MyIcon.color = Color.white;
     }
 
