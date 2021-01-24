@@ -48,6 +48,7 @@ public class SaveManager : MonoBehaviour
         }
     }
 
+    //게임을 저장, 삭제, 불러오기 버튼을 누를시 다시한번 확인하는 창 생성
     public void ShowDialogue(GameObject clickButton)
     {
         action = clickButton.name;
@@ -69,6 +70,7 @@ public class SaveManager : MonoBehaviour
         dialogue.SetActive(true);
     }
 
+    //다시한번 확인하는 창에서 확인을 누를시 실행
     public void ExecuteAction()
     {
         switch (action)
@@ -174,7 +176,7 @@ public class SaveManager : MonoBehaviour
             Player.instance.Mana.MyCurrentValue, Player.instance.Mana.MyMaxValue,
             Player.instance.transform.position);
     }
-
+    //상자 안에있는 아이템들 저장
     private void SaveChests(SaveData data)
     {
         for (int i = 0; i < chests.Length; i++)
@@ -186,6 +188,7 @@ public class SaveManager : MonoBehaviour
             {
                 if (chests[i].MyItems.Count > 0)
                 {
+                    //아이템의 이름, 갯수, 몇번째 슬롯인지
                     data.MyChestData[i].MyItems.Add(new ItemData(item.MyTitle, item.MySlot.MyItems.Count, item.MySlot.MyIndex));
                 }
             }

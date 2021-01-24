@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public delegate void HealthChanged(float health);
 
@@ -42,6 +43,7 @@ public class Enemy : Character, IInteractable
 
     protected void Start()
     {
+        health.Initialize(initHealth, initHealth);
         AggroRange = initAggroRange;
         StartPosition = transform.position;
         ChangeState(new IdleState());
@@ -61,12 +63,6 @@ public class Enemy : Character, IInteractable
         base.Update();
     }
 
-    public Transform Select()
-    {
-        healthGroup.alpha = 1;
-
-        return hitBox;
-    }
 
     public void DeSelect()
     {
@@ -79,9 +75,18 @@ public class Enemy : Character, IInteractable
     {
         if (!(currentState is EvadeState))
         {
-            SetTarget(source);
-            base.TakeDamage(damage, source);
-            OnHealthChanged(health.MyCurrentValue);
+            if (IsAlive)
+            {
+                SetTarget(source);
+                base.TakeDamage(damage, source);
+                OnHealthChanged(health.MyCurrentValue);
+
+                if (!IsAlive)
+                {
+                    Player.instance.MyAttackers.Remove(this);
+                    Player.instance.GainXP(XPManager.CalculateXP((this as Enemy)));
+                }
+            }
         }
     }
 
@@ -115,11 +120,27 @@ public class Enemy : Character, IInteractable
         OnHealthChanged(health.MyCurrentValue);
     }
 
+    public Character Select()
+    {
+        healthGroup.alpha = 1;
+
+        return this;
+    }
+
     public void Interact()
     {
         if (!IsAlive)
         {
-            lootTable.ShowLoot();
+            List<Drop> drops = new List<Drop>();
+
+            foreach (IInteractable interactable in Player.instance.MyInteractable)
+            {
+                if (interactable is Enemy && !(interactable as Enemy).IsAlive)
+                {
+                    drops.AddRange((interactable as Enemy).lootTable.GetLoot());
+                }
+            }
+            LootWindow.instance.CreatePages(drops);
         }
     }
     public void StopInteract()

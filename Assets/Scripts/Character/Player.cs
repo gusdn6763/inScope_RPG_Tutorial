@@ -17,18 +17,21 @@ public class Player : Character
     [SerializeField] private Text levelText;
 
     //NPC, 몹등과 상호작용하기 위함  
-    private IInteractable interactable;
+    //리스트 타입으로 하는 이유는 몹이 같은 위치에서 죽었을경우 루팅창을 한개밖에 열지못하기때문에 중첩으로 열기위해
+    //또 다른 예로 상자를 연 상태에서 NPC와의 상호작용이 되지 않는다거나, 루팅창을 열고 다른 상호작용이 되지 않는다.
+    private List<IInteractable> interactable = new List<IInteractable>();
+    private List<Enemy> attackers = new List<Enemy>();
 
     private Vector3 min, max;
 
     private float initMana = 50;
     private int exitIndex;
 
-    public int MyGold { get; set; }
+    public List<Enemy> MyAttackers { get; set; }
+    public List<IInteractable> MyInteractable { get { return interactable; } set { interactable = value; } }
     public Stat MyXp { get { return xpStat; } set { xpStat = value; } }
-    public IInteractable MyInteractable { get { return interactable; } set { interactable = value; } }
-
     public Stat Mana { get => mana; set => mana = value; }
+    public int MyGold { get; set; }
 
     protected override void Awake()
     {
@@ -142,6 +145,14 @@ public class Player : Character
         }
     }
 
+    public void AddAttacker(Enemy enemy)
+    {
+        if (!MyAttackers.Contains(enemy))
+        {
+            MyAttackers.Add(enemy);
+        }
+    }
+
     public void SetLimits(Vector3 min, Vector3 max)
     {
         this.min = min;
@@ -238,13 +249,7 @@ public class Player : Character
         }
     }
 
-    public void Interact()
-    {
-        if (interactable != null)
-        {
-            interactable.Interact();
-        }
-    }
+
 
     //경험치 획득
     public void GainXP(int xp)
@@ -292,7 +297,11 @@ public class Player : Character
     {
         if (collision.CompareTag("Enemy") || collision.CompareTag("Interactable"))
         {
-            interactable = collision.GetComponent<IInteractable>();
+            IInteractable interactable = collision.GetComponent<IInteractable>();
+            if (!MyInteractable.Contains(interactable))
+            {
+                MyInteractable.Add(interactable);
+            }
         }
     }
 
@@ -300,10 +309,16 @@ public class Player : Character
     {
         if (collision.CompareTag("Enemy") || collision.CompareTag("Interactable"))
         {
-            if (interactable != null)
+            if (MyInteractable.Count > 0)
             {
-                interactable.StopInteract();
-                interactable = null;
+                IInteractable interactable = MyInteractable.Find(x => x == collision.GetComponent<IInteractable>());
+
+                if (interactable != null)
+                {
+                    interactable.StopInteract();
+                }
+
+                MyInteractable.Remove(interactable);
             }
         }
     }

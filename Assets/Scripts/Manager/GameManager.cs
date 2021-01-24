@@ -12,10 +12,12 @@ public class GameManager : MonoBehaviour
     public event KillConfirmed killConfirmedEvent;
 
     [SerializeField] private Player player = null;
+    [SerializeField] private LayerMask clickableLayer, groundLayer;
 
     private Enemy currentTarget;
     private Camera mainCamera;
 
+    private int targetIndex;
 
     private void Awake()
     {
@@ -43,21 +45,16 @@ public class GameManager : MonoBehaviour
 
             if (hit.collider != null && hit.collider.CompareTag("Enemy"))
             {
-                if (currentTarget != null)
-                {
-                    currentTarget.DeSelect();
-                }
-                currentTarget = hit.collider.GetComponent<Enemy>();
-                player.Target = currentTarget.Select();
-                UIManager.instance.ShowTargetFrame(currentTarget);
+                DeSelectTarget();
+
+                SelectTarget(hit.collider.GetComponent<Enemy>());
             }
             else
             {
                 UIManager.instance.HideTargetFrame();
-                if (currentTarget != null)
-                {
-                    currentTarget.DeSelect();
-                }
+
+                DeSelectTarget();
+
                 currentTarget = null;
                 player.Target = null;
             }
@@ -68,14 +65,64 @@ public class GameManager : MonoBehaviour
             
             RaycastHit2D hit = Physics2D.Raycast(mainCamera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, Mathf.Infinity, 512);
 
-
-            Debug.Log(hit.collider);
-            if (hit.collider != null && (hit.collider.CompareTag("Enemy") || hit.collider.CompareTag("Interactable") && hit.collider.gameObject.GetComponent<IInteractable>() == player.MyInteractable))
+            if (hit.collider != null)
             {
-                player.Interact();
+                IInteractable entity = hit.collider.gameObject.GetComponent<IInteractable>();
+                if (hit.collider != null && (hit.collider.CompareTag("Enemy") || hit.collider.CompareTag("Interactable") && player.MyInteractable.Contains(entity)))
+                {
+                    entity.Interact();
+                }
+            }
+            else
+            {
+                hit = Physics2D.Raycast(mainCamera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, Mathf.Infinity, groundLayer);
             }
         }
     }
+
+
+    private void DeSelectTarget()
+    {
+        if (currentTarget != null)
+        {
+            currentTarget.DeSelect();
+        }
+    }
+
+    private void SelectTarget(Enemy enemy)
+    {
+        currentTarget = enemy;
+        player.MyTarget = currentTarget.Select();
+        UIManager.instance.ShowTargetFrame(currentTarget);
+    }
+
+    /// <summary>
+    /// 몹이 중쳡되어있을시 차례대로 몹을 클릭할 수 있게함
+    /// </summary>
+    private void NextTarget()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            DeSelectTarget();
+            if (Player.instance.MyAttackers.Count > 0)
+            {
+                if (targetIndex < Player.instance.MyAttackers.Count)
+                {
+                    SelectTarget(Player.instance.MyAttackers[targetIndex]);
+                    targetIndex++;
+                    if (targetIndex >= Player.instance.MyAttackers.Count)
+                    {
+                        targetIndex = 0;
+                    }
+                }
+                else
+                {
+                    targetIndex = 0;
+                }
+            }
+        }
+    }
+
 
     public void OnKillConfirmed(Character character)
     {

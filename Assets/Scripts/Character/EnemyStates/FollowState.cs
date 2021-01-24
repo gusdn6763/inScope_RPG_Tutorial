@@ -7,6 +7,7 @@ class FollowState : IState
 
     public void Enter(Enemy parent)
     {
+        Player.instance.AddAttacker(parent);
         this.parent = parent;
     }
 

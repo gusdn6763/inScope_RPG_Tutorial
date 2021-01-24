@@ -6,18 +6,19 @@ public class LootTable : MonoBehaviour
 {
     [SerializeField] private Loot[] loots;
 
-    private List<Item> droppedItems = new List<Item>();
+    public List<Drop> MyDroppedItems { get; set; }
+
     private bool rolled = false;
 
-    public void ShowLoot()
+    public List<Drop> GetLoot()
     {
         //만약 루팅창을 껏다가 다시키면은 루팅확률이 바뀌는것을 방지하기 위함
         if (!rolled)
         {
+            MyDroppedItems = new List<Drop>();
             RollLoot();
         }
-        //드롭확률로 아이템이 생성시 페이지에 아이템을 생성
-        LootWindow.instance.CreatePages(droppedItems);
+        return MyDroppedItems;
     }
 
     //루팅 확률  
@@ -29,7 +30,7 @@ public class LootTable : MonoBehaviour
 
             if (roll <= loot.DropChance)
             {
-                droppedItems.Add(loot.Item);
+                MyDroppedItems.Add(new Drop(loot.Item, this));
             }
         }
         rolled = true;

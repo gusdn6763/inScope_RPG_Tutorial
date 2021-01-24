@@ -15,8 +15,8 @@ public class LootWindow : MonoBehaviour
     private CanvasGroup canvasGroup;
 
     //모든페이지 포함하는 변수, 페이지마다 아이템의 리스트를 표현
-    private List<List<Item>> pages = new List<List<Item>>();
-    private List<Item> droppedLoot = new List<Item>();
+    private List<List<Drop>> pages = new List<List<Drop>>();
+    private List<Drop> droppedLoot = new List<Drop>();
  
  
     // 현재 열려있는 상태인지 확인
@@ -42,13 +42,13 @@ public class LootWindow : MonoBehaviour
     }
 
     //하이템 페이지 리스트를 표현
-    public void CreatePages(List<Item> items)
+    public void CreatePages(List<Drop> items)
     {
         //몹의 루팅UI에서 아이템이 계속 생성되는것을 방지하기위함
         if (!IsOpen)
         {
             //받은 아이템이 10개라면 3개의 페이지를 만듬
-            List<Item> page = new List<Item>();
+            List<Drop> page = new List<Drop>();
 
             droppedLoot = items;
 
@@ -59,7 +59,7 @@ public class LootWindow : MonoBehaviour
                 if (page.Count == 4 || i == items.Count - 1)
                 {
                     pages.Add(page);
-                    page = new List<Item>();
+                    page = new List<Drop>();
                 }
             }
             AddLoot();
@@ -83,15 +83,15 @@ public class LootWindow : MonoBehaviour
                 if (pages[pageIndex][i] != null)
                 {
                     // 아이콘 설정
-                    lootbuttons[i].MyIcon.sprite = pages[pageIndex][i].MyIcon;
+                    lootbuttons[i].MyIcon.sprite = pages[pageIndex][i].MyItem.MyIcon;
 
-                    lootbuttons[i].MyLoot = pages[pageIndex][i];
+                    lootbuttons[i].MyLoot = pages[pageIndex][i].MyItem;
 
                     // 활성화
                     lootbuttons[i].gameObject.SetActive(true);
 
                     // 아이템 제목 설정
-                    string title = string.Format("<color={0}>{1}</color>", QualityColor.MyColors[pages[pageIndex][i].MyQuality], pages[pageIndex][i].MyTitle);
+                    string title = string.Format("<color={0}>{1}</color>", QualityColor.MyColors[pages[pageIndex][i].MyItem.MyQuality], pages[pageIndex][i].MyItem.MyTitle);
                     lootbuttons[i].MyTitle.text = title;
                 }
             }
@@ -131,8 +131,11 @@ public class LootWindow : MonoBehaviour
     //얻은 아이템을 루팅UI에서 삭제 및 droppedLoot에서도 삭제해 루팅UI를 껏다켜도 다시 아이템이 생성되지 않게함
     public void TakeLoot(Item item)
     {
-        pages[pageIndex].Remove(item);
-        droppedLoot.Remove(item);
+        Drop drop = pages[pageIndex].Find(x => x.MyItem == item);
+
+        pages[pageIndex].Remove(drop);
+
+        drop.Remove();
 
         //현재 페이지에 아이템이 없으면
         if (pages[pageIndex].Count == 0)
@@ -161,6 +164,7 @@ public class LootWindow : MonoBehaviour
         //루팅UI를 껏다키면 아이템이 계속 생성되는것을 방지하기위해 루팅UI를 끌시 아이템을 전부 삭제시킨다.
         //루팅UI를 키면은 루팅한 아이템을 다시 생성하지만 droppedLoot변수로 아이템을 관리하기때문에 아이템을 루팅시 
         //droppedLoot변수에서 드랍한 아이템을 삭제한다. 
+        pageIndex = 0;
         pages.Clear();
         ClearButtons();
         canvasGroup.alpha = 0;

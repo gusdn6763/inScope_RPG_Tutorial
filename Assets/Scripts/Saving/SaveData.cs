@@ -6,15 +6,15 @@ using UnityEngine;
 [Serializable]
 public class SaveData
 {
-    public List<ChestData> MyChestData { get; set; }
-    public List<EquipmentData> MyEquipmentData { get; set; }
-    public List<ActionButtonData> MyActionButtonData { get; set; }
-    public List<QuestData> MyQuestData { get; set; }
+    public List<ChestData> MyChestData { get; set; }        //상자는 맵상에 여러개가 존재하므로 리스트로 저장
+    public List<EquipmentData> MyEquipmentData { get; set; }   //플레이어 장비창의 장비슬롯은 여러개이므로 리스트로 저장
+    public List<ActionButtonData> MyActionButtonData { get; set; } //플레이어 액션바
+    public List<QuestData> MyQuestData { get; set; }        //퀘스트
     public List<QuestGiverData> MyQuestGiverData { get; set; }
-    public PlayerData MyPlayerData { get; set; }
-    public InventoryData MyInventoryData { get; set; }
-    public DateTime MyDateTime { get; set; }
-    public string MyScene { get; set; }
+    public PlayerData MyPlayerData { get; set; }            //플레이어 정보
+    public InventoryData MyInventoryData { get; set; }      //인벤토리 정보
+    public DateTime MyDateTime { get; set; }                //저장 슬롯에 날짜를 보여주기위함
+    public string MyScene { get; set; }                     //저장 슬롯에 현재 위치를 보여주기 위함
 
     public SaveData()
     {
