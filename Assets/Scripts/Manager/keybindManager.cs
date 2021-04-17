@@ -34,9 +34,9 @@ public class KeybindManager : MonoBehaviour
         BindKey("DOWN", KeyCode.S);
         BindKey("RIGHT", KeyCode.D);
 
-        BindKey("ACTION1", KeyCode.Alpha1);
-        BindKey("ACTION2", KeyCode.Alpha2);
-        BindKey("ACTION3", KeyCode.Alpha3);
+        BindKey("ACT1", KeyCode.Alpha1);
+        BindKey("ACT2", KeyCode.Alpha2);
+        BindKey("ACT3", KeyCode.Alpha3);
     }
 
     public void BindKey(string key, KeyCode keyBind)

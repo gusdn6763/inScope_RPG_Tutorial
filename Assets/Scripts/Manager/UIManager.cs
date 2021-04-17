@@ -54,7 +54,15 @@ public class UIManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
-            OpenClose(menus[2]);
+            OpenClose(menus[3]);
+        }
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            OpenClose(menus[4]);
+        }
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            OpenClose(menus[5]);
         }
         if (Input.GetKeyDown(KeyCode.I))
         {
