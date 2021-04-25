@@ -4,23 +4,30 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+/// <summary>
+/// 상인의 상점 버튼
+/// </summary>
 public class VendorButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    [SerializeField] private Image icon;
+    [SerializeField] private Image icon;        //아이콘
 
-    [SerializeField] private Text title;
+    [SerializeField] private Text title;        //이름
 
-    [SerializeField] private Text price;
+    [SerializeField] private Text price;        //가격
 
-    [SerializeField] private Text quantity;
+    [SerializeField] private Text quantity;     //수량
 
-    private VendorItem vendorItem;
+    private VendorItem vendorItem;              //상인이 파는 아이템의 정보
 
+    /// <summary>
+    /// 상인의 상점창에서 아이템 추가
+    /// </summary>
+    /// <param name="vendorItem">상인 아이템의 정보를 받음</param>
     public void AddItem(VendorItem vendorItem)
     {
         this.vendorItem = vendorItem;
 
-        //아이템의 수량이 0개 이상이거나 || 아이템 갯수 제한이 없을경우  
+        //아이템의 수량이 1개 이상이거나 || 아이템 갯수 제한이 없을경우  
         if (vendorItem.MyQuantity > 0 || vendorItem.Unlimited)
         {
             icon.sprite = vendorItem.MyItem.MyIcon;
@@ -63,6 +70,10 @@ public class VendorButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         UIManager.instance.HideTooltip();
     }
+
+    /// <summary>
+    /// 아이템을 샀을경우
+    /// </summary>
     private void SellItem()
     {
         Player.instance.MyGold -= vendorItem.MyItem.MyPrice;

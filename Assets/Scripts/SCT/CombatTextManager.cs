@@ -23,6 +23,13 @@ public class CombatTextManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 텍스트를 생성하는 함수
+    /// </summary>
+    /// <param name="position">생성할 위치</param>
+    /// <param name="text">텍스트</param>
+    /// <param name="type">어떠한 타입의 텍스트인지</param>
+    /// <param name="crit">크리일경우 빨간색</param>
     public void CreateText(Vector2 position, string text, SCTTYPE type, bool crit)
     {
         //플레이어 위치에 알맞게 생성

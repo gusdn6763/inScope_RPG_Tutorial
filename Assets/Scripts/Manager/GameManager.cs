@@ -92,7 +92,7 @@ public class GameManager : MonoBehaviour
     private void SelectTarget(Enemy enemy)
     {
         currentTarget = enemy;
-        player.MyTarget = currentTarget.Select();
+        player.Target = currentTarget.Select();
         UIManager.instance.ShowTargetFrame(currentTarget);
     }
 

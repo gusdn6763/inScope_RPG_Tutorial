@@ -6,13 +6,13 @@ using UnityEngine;
 public abstract class Character : MonoBehaviour
 {
     [SerializeField] protected Stat health = null;
-    [SerializeField] protected Transform hitBox = null;
+    [SerializeField] private Transform hitBox = null;
     [SerializeField] protected float initHealth = 0f;
     [SerializeField] private float speed = 1f;
     [SerializeField] private string type;
     [SerializeField] private int level;
 
-    private Transform target;
+    private Character target;
     protected Rigidbody2D rigi;
     protected Coroutine attackRoutine;
 
@@ -20,8 +20,8 @@ public abstract class Character : MonoBehaviour
     protected bool isAttacking = false;
 
     public Stat Health { get { return health; } }
-    public Character MyTarget { get; set; }
-    public Transform Target { get => target; set => target = value; }
+    public Character Target { get => target; set => target = value; }
+    public Transform MyHitbox { get { return hitBox; } set { hitBox = value; } }
     public Animator Animator { get; set; }
     public Vector2 Direction { get => direction; set => direction = value; }
     public float Speed { get => speed; set => speed = value; }
@@ -99,7 +99,7 @@ public abstract class Character : MonoBehaviour
     }
 
     //공격 받을시
-    public virtual void TakeDamage(float damage, Transform source)
+    public virtual void TakeDamage(float damage, Character source)
     {
         health.MyCurrentValue -= damage;
         CombatTextManager.instance.CreateText(transform.position, damage.ToString(), SCTTYPE.DAMAGE, true);

@@ -46,8 +46,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e004734e103af284a9c46984561ac393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  openSprite: {fileID: 21300000, guid: d2c3c4eb63e3a6d44b895320fe99184b, type: 3}
-  closedSprite: {fileID: 21300000, guid: 87f9281ae88e1934db805766b4d81b33, type: 3}
+  openSprite: {fileID: 21300000, guid: d879b7fbb54e5fe40900352da5987810, type: 3}
+  closedSprite: {fileID: 21300000, guid: 2763e063cf78ea0469ee8d496e907833, type: 3}
+  canvasGroup: {fileID: 0}
+  bag: {fileID: 0}
 --- !u!212 &6786976258387281610
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -87,7 +89,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 87f9281ae88e1934db805766b4d81b33, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2763e063cf78ea0469ee8d496e907833, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

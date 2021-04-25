@@ -2,13 +2,11 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-//캐릭터 장비창
 /// <summary>
-/// 
+/// 캐릭터 장비창
 /// </summary>
 public class CharButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    ///
     [SerializeField] private GearSocket gearSocket;
     [SerializeField] private ArmorType armorType;
 
@@ -21,6 +19,7 @@ public class CharButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
     public CharButton MyCharButton { get; set; }
     public Armor MyEquippedArmor { get => equippedArmor; }
 
+        
     public void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Left)
@@ -106,6 +105,9 @@ public class CharButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
         }
     }
 
+    /// <summary>
+    /// 장비 벗기
+    /// </summary>
     public void DequipArmor()
     {
         icon.color = Color.white;

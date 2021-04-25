@@ -14,7 +14,7 @@ public class Range : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            parent.SetTarget(collision.transform);
+            parent.SetTarget(collision.GetComponent<Character>());
         }
     }
 

@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
  
+/// <summary>
+/// 슬롯 하나하나마다 스크립트가 존재
+/// </summary>
 public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPointerEnterHandler, IPointerExitHandler
 {
     //아이템의 중복갯수
@@ -28,7 +31,7 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
     public ObservableStack<Item> MyItems { get => items; }
     public Image MyIcon { get { return icon; } set { icon = value; } }
     public Text MyStackText { get { return stackSize; } }
-
+    
     public int MyIndex { get; set; }                                //몇번째 슬롯에 있는지 저장하기 위함
     public int MyCount { get { return MyItems.Count; } }            //아이템 갯수
     public bool IsEmpty { get { return MyItems.Count == 0; } }      //빈 슬롯 여부
@@ -47,11 +50,17 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
 
     private void Awake()
     {
+        //아이템이 추가, 사용, 없어졌을때 UpdateSlot함수를 실행하도록 만듬
         MyItems.OnPop += new UpdateStackEvent(UpdateSlot);
         MyItems.OnPush += new UpdateStackEvent(UpdateSlot);
         MyItems.OnClear += new UpdateStackEvent(UpdateSlot);
     }
-    // 슬롯에 아이템 추가.
+
+    /// <summary>
+    /// 슬롯에 아이템 추가.
+    /// </summary>
+    /// <param name="item">어떠한 아이템을 추가할지 선택</param>
+    /// <returns></returns>
     public bool AddItem(Item item)
     {
         MyItems.Push(item);

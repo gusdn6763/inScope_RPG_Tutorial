@@ -12,7 +12,7 @@ public class DeathBehaviout : StateMachineBehaviour
         Destroy(animator.transform.GetChild(0).gameObject);
     }
 
-    //애니메이션이 시작중일때
+    //애니메이션이 시작중일때 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         timePassed += Time.deltaTime;

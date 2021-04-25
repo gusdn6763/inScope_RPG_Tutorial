@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
 
+/// <summary>
+/// 공격 상태
+/// </summary>
 public class AttackState : IState
 {
     private Enemy parent;
@@ -29,7 +32,7 @@ public class AttackState : IState
         //타겟이 존재시
         if (parent.Target != null)
         {
-            float distance = Vector2.Distance(parent.Target.position, parent.transform.position);
+            float distance = Vector2.Distance(parent.Target.transform.position, parent.transform.position);
             
             //어그로 범위 >= 공격 범위 + 플레이어가 공격한 추가 거리 && 공격상태가 아닐때 
             if (distance >= parent.AttackRange + parent.ExtraRange && !parent.IsAttacking)

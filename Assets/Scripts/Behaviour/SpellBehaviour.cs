@@ -16,6 +16,7 @@ public class SpellBehaviour : StateMachineBehaviour
     //    
     //}
 
+    //몹과 부딪힐시 터지는 이펙트가 발생하며 실행
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {

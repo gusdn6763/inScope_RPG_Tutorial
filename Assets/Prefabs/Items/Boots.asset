@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a042553797dd4549ac0b559b87cffca, type: 3}
   m_Name: Boots
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 1cb20846d52db124d9899240871788a0, type: 3}
+  icon: {fileID: 21300000, guid: 7f184100b1526d34a9af3c5415d39a2c, type: 3}
   quality: 0
-  stackSize: 0
   title: "\uBA4B\uC9C4 \uC2E0\uBC1C"
+  stackSize: 0
+  price: 0
   animationClips:
   - {fileID: 7400000, guid: cde7039f3eea8fe40bf4d4f7d30c76ac, type: 2}
   - {fileID: 7400000, guid: f704421bcf9f13b408f95df281508124, type: 2}

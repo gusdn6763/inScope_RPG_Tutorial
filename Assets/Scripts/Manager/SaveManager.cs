@@ -52,7 +52,7 @@ public class SaveManager : MonoBehaviour
     public void ShowDialogue(GameObject clickButton)
     {
         action = clickButton.name;
-        Debug.Log(action);
+
         switch (action)
         {
             case "Load":

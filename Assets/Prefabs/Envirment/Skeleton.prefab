@@ -133,12 +133,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 3a4f20e0ef7b9384fa7863b7f5062051, type: 3}
+  m_Sprite: {fileID: 21300000, guid: feb2026ea8118fe408a2482307f7906a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1.5533333}
+  m_Size: {x: 0.69, y: 1.4933333}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -162,7 +162,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 0.69, y: 1.4933333}
-    newSize: {x: 1, y: 1.5533333}
+    newSize: {x: 0.69, y: 1.4933333}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -201,7 +201,7 @@ Animator:
   m_GameObject: {fileID: 346196921602504574}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: fccaf345fb68b00458ae75f7cc15790b, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -224,10 +224,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: {fileID: 346196922106251578}
   hitBox: {fileID: 346196921545560956}
-  speed: 1
   initHealth: 25
-  Portrait: {fileID: 21300000, guid: ccb2634a2ac8cf94fb24425732145b09, type: 3}
+  speed: 1
+  type: 
+  level: 0
   healthGroup: {fileID: 346196922387467525}
+  attackRange: 1
+  extraRange: 0.2
+  initAggroRange: 0
+  Portrait: {fileID: 21300000, guid: ccb2634a2ac8cf94fb24425732145b09, type: 3}
 --- !u!1 &346196922106251582
 GameObject:
   m_ObjectHideFlags: 0
@@ -317,7 +322,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statValue: {fileID: 0}
   lerpSpeed: 1
-  MyMaxValue: 0
 --- !u!1 &346196922387467528
 GameObject:
   m_ObjectHideFlags: 0

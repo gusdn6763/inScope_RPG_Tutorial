@@ -48,6 +48,7 @@ public class Player : Character
 
     protected void Start()
     {
+        MyAttackers = new List<Enemy>();
         health.Initialize(initHealth, initHealth);
         Mana.Initialize(initMana, initMana);
         xpStat.Initialize(0, Mathf.Floor(100 * MyLevel * Mathf.Pow(MyLevel, 0.5f)));
@@ -161,7 +162,7 @@ public class Player : Character
 
     private IEnumerator Attack(string spellName)
     {
-        Transform currentTarget = Target;
+        Transform currentTarget = Target.MyHitbox;
         Spell newSpell = SpellBook.instance.CastSpell(spellName);
 
         isAttacking = true;
@@ -178,7 +179,7 @@ public class Player : Character
         {
             SpellScript s = Instantiate(newSpell.SpellGameObject, exitPoint[exitIndex].position, Quaternion.identity).GetComponent<SpellScript>();
 
-            s.Initialize(currentTarget, newSpell.Damage, transform);
+            s.Initialize(currentTarget, newSpell.Damage, this);
         }
         StopAttack();
     }
@@ -201,7 +202,7 @@ public class Player : Character
         {
             Vector3 targetDirection = (Target.transform.position - transform.position).normalized;
 
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, targetDirection, Vector2.Distance(transform.position, Target.position), 256);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, targetDirection, Vector2.Distance(transform.position, Target.transform.position), 256);
             if (hit.collider == null)
             {
                 return true;

@@ -279,12 +279,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 419636044538856524, guid: 508c1ea02af966e4f882129db6e8c605, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a2905324e9c8ef74bbb9c14641b7d76a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 14.266666, y: 15.333333}
+  m_Size: {x: 0.9633333, y: 1.2066667}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -344,9 +344,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: {fileID: 0}
   hitBox: {fileID: 0}
-  speed: 5
   initHealth: 100
-  mana: {fileID: 0}
+  speed: 5
+  type: 
+  level: 0
+  gearSockets: []
   blocks:
   - first: {fileID: 8235035398185775568}
     second: {fileID: 8235035398597851882}
@@ -361,6 +363,10 @@ MonoBehaviour:
   - {fileID: 8235035397737970988}
   - {fileID: 8235035397536115029}
   - {fileID: 8235035397991576560}
+  levelUpEffect: {fileID: 0}
+  mana: {fileID: 0}
+  xpStat: {fileID: 0}
+  levelText: {fileID: 0}
 --- !u!114 &8235035397718328353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -379,6 +385,7 @@ MonoBehaviour:
     icon: {fileID: 21300000, guid: 310d3b82960b5ba46a08e2dcf0a5b8ad, type: 3}
     barColor: {r: 1, g: 0.33490568, b: 0.33490568, a: 1}
     name: Fireball
+    description: 
     castTime: 2.5
     speed: 5
     damage: 5
@@ -387,6 +394,7 @@ MonoBehaviour:
     icon: {fileID: 21300000, guid: 2551ee26c3101274488332476aaafd35, type: 3}
     barColor: {r: 0.1745283, g: 0.37789884, b: 1, a: 1}
     name: Frostbolt
+    description: 
     castTime: 0.1
     speed: 5
     damage: 10000
@@ -395,12 +403,13 @@ MonoBehaviour:
     icon: {fileID: 21300000, guid: d37c71a2fd0b2f048abd0925259c1da8, type: 3}
     barColor: {r: 1, g: 0.9582551, b: 0.3066038, a: 1}
     name: Thunderbolt
+    description: 
     castTime: 3
     speed: 10
     damage: 5
   castingBar: {fileID: 0}
   spellIcon: {fileID: 0}
-  spellName: {fileID: 0}
+  currentSpell: {fileID: 0}
   spellCastingTime: {fileID: 0}
   canvasGroup: {fileID: 0}
 --- !u!61 &8235035397718328366
@@ -420,8 +429,8 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.4266666, y: 1.5333333}
-    newSize: {x: 14.266666, y: 15.333333}
+    oldSize: {x: 0.9633333, y: 1.2066667}
+    newSize: {x: 0.9633333, y: 1.2066667}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0

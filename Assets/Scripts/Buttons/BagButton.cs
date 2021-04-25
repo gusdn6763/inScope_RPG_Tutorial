@@ -4,8 +4,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+/// <summary>
+/// 플레이어 우측 하단에 있는 버튼
+/// </summary>
 public class BagButton : MonoBehaviour, IPointerClickHandler
 {
+    //Bag란 이름의 아이템
     private Bag bag;
 
     [SerializeField] private Sprite full, empty;                //가방슬롯이 있는 이미지, 없는 이미지

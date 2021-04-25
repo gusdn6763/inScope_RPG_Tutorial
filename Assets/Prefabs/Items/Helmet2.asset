@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a042553797dd4549ac0b559b87cffca, type: 3}
   m_Name: Helmet2
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 68c5b492e4520664d9cc586ab75c7122, type: 3}
+  icon: {fileID: 21300000, guid: f12e6259250219943b11ebe8bb7555c5, type: 3}
   quality: 0
-  stackSize: 0
   title: "\uB300\uB2E8\uD55C \uD5EC\uBA67"
+  stackSize: 0
+  price: 0
   animationClips:
   - {fileID: 7400000, guid: a129227425db16a4ca7e67e96a6137df, type: 2}
   - {fileID: 7400000, guid: 93194b85617bccf478fee9198f1b5cdb, type: 2}

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+/// <summary>
+/// 스펠북에서 스킬 버튼
+/// </summary>
 public class SpellButton : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] private string spellName = null; 

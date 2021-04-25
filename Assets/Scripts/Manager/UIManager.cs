@@ -56,14 +56,6 @@ public class UIManager : MonoBehaviour
         {
             OpenClose(menus[3]);
         }
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            OpenClose(menus[4]);
-        }
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            OpenClose(menus[5]);
-        }
         if (Input.GetKeyDown(KeyCode.I))
         {
             InventoryScript.instance.OpenClose();

@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+/// <summary>
+/// 가방 또는 스펠북, 액션바에서 무언가를 선택시 값을 저장
+/// </summary>
 public class HandScript : MonoBehaviour
 {
     public static HandScript instance;

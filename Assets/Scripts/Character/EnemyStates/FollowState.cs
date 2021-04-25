@@ -22,12 +22,12 @@ class FollowState : IState
         {
             parent.Direction = (parent.Target.transform.position - parent.transform.position).normalized;
 
-            Vector3 targetPosition = parent.Target.position;
+            Vector3 targetPosition = parent.Target.transform.position;
             Vector3 myPosition = parent.transform.position;
             parent.transform.position
                 = Vector2.MoveTowards(myPosition, targetPosition, parent.Speed * Time.deltaTime);
 
-            float distance = Vector2.Distance(parent.Target.position, parent.transform.position);
+            float distance = Vector2.Distance(parent.Target.transform.position, parent.transform.position);
             if (distance <= parent.AttackRange)
             {
                 parent.ChangeState(new AttackState());

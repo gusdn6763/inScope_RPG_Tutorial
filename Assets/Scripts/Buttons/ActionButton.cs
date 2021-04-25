@@ -4,14 +4,19 @@ using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
 /// <summary>
-/// 플레이어 액션바 관련 클래스, OnPointerClick함수 먼저 보는것을 추천
+/// 플레이어 액션바 관련 클래스, 인터페이스함수 정의를 알아보고, OnPointerClick함수 먼저 보는것을 추천
 /// </summary>
+/// IPointerClickHandler : 마우스로 오브젝트를 클릭시 감지
+/// IClickable : 사용자 정의 인터페이스 -> 아이콘과 갯수를 포함
+/// IPointerEnterHandler : 마우스가 오브젝트에 들어왔을때 한번 감지
+/// IPointerExitHandler : 마우스가 오브젝트에서 벗어낫을시 감지
 public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Text stackSize;
-
-    private Stack<IUseable> useables = new Stack<IUseable>();
     [SerializeField] private Image icon;
+
+    //사용 가능한 아이템들을 스택으로 저장 -> 얻은 아이템을 순차적으로 사용하기위함
+    private Stack<IUseable> useables = new Stack<IUseable>();
     private int count;
 
     public IUseable MyUseable { get; set; }
@@ -42,14 +47,16 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
     }
     private void Start()
     {
-        // 클릭 이벤트를 MyButton 에 등록한다.
+        // 클릭 이벤트를 MyButton 에 등록한다. -> Awake함수에 컴포넌트를 받는다.
         MyButton.onClick.AddListener(OnClick);
+        //아이템의 수량이 변경되었을 경우를 대비해 플레이어 Action버튼의 수량 또한 바로 바꿔주기 위함
         InventoryScript.instance.itemCountChangedEvent += new ItemCountChanged(UpdateItemCount);
     }
 
-    // 클릭 발생하면 실행
+    //버튼 클릭 발생하면 실행
     public void OnClick()
     {
+        //클릭 도중 드래그 한것이 없으면
         if (HandScript.instance.Dragable == null)
         {
             // 액션퀵슬롯에 등록된 것이 사용가능한것이면 --> Iuseable을 상속받았다면
@@ -80,6 +87,34 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
             }
         }
     }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        IDescribable tmp = null;
+
+        // 액션 버튼에 등록된 것이 스킬이라면
+        //아이템도 MyUseable인터페이스가 존재하지만 SetUseable함수에서 MyUseable변수를 할당해주는것은 스킬뿐
+        if (MyUseable != null && MyUseable is IDescribable)
+        {
+            tmp = (IDescribable)MyUseable;
+        }
+        // 액션 버튼에 등록된 것이 아이템이라면
+        else if (MyUseables.Count > 0)
+        {
+            //#13.5 기준 액션퀵슬롯에 아이템이 들어갈시 설명창UI는 표현하지 않는다
+            //UIManager.instance.ShowTooltip(transform.position, tmp);
+        }
+        if (tmp != null)
+        {
+            UIManager.instance.ShowTooltip(new Vector2(1, 0), transform.position, tmp);
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        UIManager.instance.HideTooltip();
+    }
+
 
     /// <summary>
     /// 액션바에 놓을시Dragable에 있는 값을 이용해 액션바에 값을 저장   
@@ -157,32 +192,5 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
                 UIManager.instance.UpdateStackSize(this);
             }
         }
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        IDescribable tmp = null;
-
-        // 액션 버튼에 등록된 것이 스킬이라면
-        //아이템도 MyUseable인터페이스가 존재하지만 SetUseable함수에서 MyUseable변수를 할당해주는것은 스킬뿐
-        if (MyUseable != null && MyUseable is IDescribable)
-        {
-            tmp = (IDescribable)MyUseable;
-        }
-        // 액션 버튼에 등록된 것이 아이템이라면
-        else if (MyUseables.Count > 0)
-        {
-            //#13.5 기준 액션퀵슬롯에 아이템이 들어갈시 설명창UI는 표현하지 않는다
-         //   UIManager.instance.ShowTooltip(transform.position, tmp);
-        }
-        if (tmp != null)
-        {
-            UIManager.instance.ShowTooltip(new Vector2(1, 0), transform.position, tmp);
-        }
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        UIManager.instance.HideTooltip();
     }
 }

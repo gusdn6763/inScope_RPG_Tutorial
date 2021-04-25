@@ -32,7 +32,7 @@ public class Enemy : Character, IInteractable
     public float AttackRange { get => attackRange; set => attackRange = value; }
     public float ExtraRange { get => extraRange; set => extraRange = value; }
     public float AggroRange { get; set; }
-    public bool InRange {get { return Vector2.Distance(transform.position, Target.position) < AggroRange; } }
+    public bool InRange {get { return Vector2.Distance(transform.position, Target.transform.position) < AggroRange; } }
     public float AttackTime { get; set; }
 
     protected override void Awake()
@@ -71,7 +71,7 @@ public class Enemy : Character, IInteractable
         characterRemoved -= new CharacterRemoved(UIManager.instance.HideTargetFrame);
     }
 
-    public override void TakeDamage(float damage, Transform source)
+    public override void TakeDamage(float damage, Character source)
     {
         if (!(currentState is EvadeState))
         {
@@ -101,11 +101,11 @@ public class Enemy : Character, IInteractable
         currentState.Enter(this);
     }
 
-    public void SetTarget(Transform target)
+    public void SetTarget(Character target)
     {
         if (Target == null && !(currentState is EvadeState))
         {
-            float distance = Vector2.Distance(transform.position, target.position);
+            float distance = Vector2.Distance(transform.position, target.transform.position);
             AggroRange = initAggroRange;
             AggroRange += distance;
             Target = target;

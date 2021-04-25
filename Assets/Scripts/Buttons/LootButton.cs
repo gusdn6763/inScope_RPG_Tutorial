@@ -2,6 +2,9 @@
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+/// <summary>
+/// 루팅창
+/// </summary>
 public class LootButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     [SerializeField] private LootWindow lootWindow;

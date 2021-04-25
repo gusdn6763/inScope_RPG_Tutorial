@@ -6,7 +6,7 @@ public class SpellScript : MonoBehaviour
 {
     private Rigidbody2D rigi;
     private Animator animator;
-    private Transform source;
+    private Character source;
     public Transform MyTarget { get;private set; }
     [SerializeField] private float speed = 1f;
     private float damage;
@@ -44,7 +44,7 @@ public class SpellScript : MonoBehaviour
         }
     }
 
-    public void Initialize(Transform target, int damage, Transform source)
+    public void Initialize(Transform target, int damage, Character source)
     {
         this.MyTarget = target;
         this.damage = damage;
